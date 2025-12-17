@@ -202,7 +202,7 @@ Add this to your website forms:
 1. Ensure you have `docker` and `docker-compose` installed
 2. Build and run:
 ```bash
-docker-compose up -d
+docker compose build --no-cache && docker compose up -d
 ```
 
 This will:
@@ -306,6 +306,11 @@ Process form submissions.
 - `200`: Success (redirects to thank you page)
 - `400`: Invalid request or Turnstile verification failed
 - `500`: Server error
+
+## Reverse Proxy
+
+> This server can be reverse proxied. I have only attempted it with NPM, but there are no special configuration options, other than "allow websockets"
+> The server MUST be exposed using HTTPS for any modern website to work properly, you "can" get by not using TLS, but the form will warn users when they go to use it.
 
 ## Troubleshooting
 
