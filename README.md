@@ -1,4 +1,4 @@
-# Form Backend Server
+# Web Contact Form Backend Server
 
 A Node.js application for processing website contact forms with support for multiple websites, email notifications, and bot protection.
 
