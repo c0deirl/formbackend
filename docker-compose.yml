@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  form-processor:
+    # Build the image from the Dockerfile in the current directory
+    build: .
+    container_name: form_processor
+    # Restart policy: always restart unless manually stopped
+    restart: always
+    ports:
+      # Map the container's port 3000 to the host machine's port 3000
+      - "3000:3000"
+    # Optional: Mount the config file to allow updating config without rebuilding the image (for production)
+    volumes:
+      - ./config.json:/usr/src/app/config.json

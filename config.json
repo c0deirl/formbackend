@@ -1,0 +1,37 @@
+{
+    "recipients": {
+        "website-a": {
+            "to": "recipient@your-domain.com",
+            "subjectPrefix": "Your Website Contact Form - ",
+            "redirectUrl": "https://your-domain.com/thanks.html",
+            "templatePath": "email-template-website-a.html"
+        },
+        "website-b": {
+            "to": "support@website-b-domain.com",
+            "subjectPrefix": "Your Website Contact Form - ",
+            "redirectUrl": "https://your-domain.com/thanks.html",
+            "templatePath": "email-template-website-b.html"
+        }
+    },
+    "smtp": {
+        "host": "smtp.yourdomain.com",
+        "port": 25,
+        "secure": false,
+        "from": "webform@your-domain.com" 
+    },
+    "turnstile": {
+        "website-a": {
+            "secretKey": "YOUR_WEBSITE_A_TURNSTILE_SECRET_KEY"
+        },
+        "website-b": {
+            "secretKey": "YOUR_WEBSITE_B_TURNSTILE_SECRET_KEY"
+        }
+    },
+    "cors": {
+        "allowedOrigins": [
+            "https://your-domain-a.com",
+            "https://your-domain-b.com",
+            "https://subdomain.your-domain.com"
+        ]
+    }
+}
