@@ -309,8 +309,9 @@ Process form submissions.
 
 ## Reverse Proxy
 
-> This server can be reverse proxied. I have only attempted it with NPM, but there are no special configuration options, other than "allow websockets"
-> The server MUST be exposed using HTTPS for any modern website to work properly, you "can" get by not using TLS, but the form will warn users when they go to use it.
+#### This server can be reverse proxied. I have only attempted it with NPM, but there are no special configuration options, other than "allow websockets"
+
+#### The server MUST be exposed using HTTPS for any modern website to work properly, you "can" get by not using TLS, but the form will warn users when they go to use it.
 
 ## Troubleshooting
 
