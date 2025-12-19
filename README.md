@@ -313,6 +313,123 @@ Process form submissions.
 
 #### The server MUST be exposed using HTTPS for any modern website to work properly, you "can" get by not using TLS, but the form will warn users when they go to use it.
 
+## Health Monitoring
+
+### 1. Health Check Endpoint (`/health`)
+- **Location**: `server.js:134-166`
+- **Method**: GET
+- **Response Code**: 200 (success), 503 (error)
+
+### 2. Health Check Features
+
+#### **Core Monitoring Metrics**
+- **Status**: Overall health status (`ok`, `warning`, `error`)
+- **Timestamp**: ISO 8601 formatted time of check
+- **Uptime**: Server uptime in seconds
+- **Memory Usage**: 
+  - `used`: Current heap memory usage (MB)
+  - `total`: Total heap memory allocated (MB)
+
+#### **Configuration Status**
+- **Websites**: List of configured website IDs from `config.recipients`
+- **SMTP**: Configuration status (`configured` or `missing`)
+- **Turnstile**: List of configured Turnstile website keys
+
+### 3. Response Format
+
+#### **Success Response (200)**
+```json
+{
+    "status": "ok",
+    "timestamp": "2024-01-15T10:30:00.000Z",
+    "uptime": 3600.5,
+    "memory": {
+        "used": 45.25,
+        "total": 128.75
+    },
+    "config": {
+        "websites": ["website-a", "website-b"],
+        "smtp": "configured",
+        "turnstile": ["website-a", "website-b"]
+    }
+}
+```
+
+#### **Error Response (503)**
+```json
+{
+    "status": "error",
+    "timestamp": "2024-01-15T10:30:00.000Z",
+    "error": "Health check failed"
+}
+```
+
+### Monitoring Integration Options
+
+#### **HTTP Monitoring**
+```bash
+curl http://your-server:3000/health
+```
+
+#### **Status-Based Monitoring**
+- Check `status` field for operational state
+- `ok`: Server healthy
+- `warning`: Minor issues (configurable)
+- `error`: Critical failure
+
+#### **Docker Health Check**
+```yaml
+healthcheck:
+  test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+  interval: 30s
+  timeout: 10s
+  retries: 3
+  start_period: 40s
+```
+
+## Optional Features
+
+### **SMTP Connectivity Testing**
+The implementation includes commented code for SMTP connection verification:
+```javascript
+// Optional: Test SMTP connection (commented out by default for performance)
+// try {
+//     await transporter.verify();
+//     healthCheck.smtp = 'connected';
+// } catch (error) {
+//     healthCheck.smtp = 'connection_error';
+//     healthCheck.status = 'warning';
+// }
+```
+
+**To enable SMTP testing:**
+1. Uncomment the SMTP verification code block
+2. The health check will test SMTP connectivity on each request
+3. Status will show `connected` or `connection_error`
+4. Overall status changes to `warning` if SMTP fails
+
+## Usage Examples
+
+### **Basic Health Check**
+```bash
+curl http://localhost:3000/health
+```
+
+### **Monitoring Script Example**
+```bash
+#!/bin/bash
+response=$(curl -s http://localhost:3000/health)
+status=$(echo $response | jq -r '.status')
+
+if [ "$status" = "ok" ]; then
+    echo "Server is healthy"
+    exit 0
+else
+    echo "Server health check failed: $status"
+    exit 1
+fi
+```
+
 ## Troubleshooting
 
 ### Common Issues
