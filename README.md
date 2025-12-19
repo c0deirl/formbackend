@@ -10,6 +10,7 @@ A Node.js application for processing website contact forms with support for mult
 - ✅ **Docker Ready**: Containerized deployment with Docker and Docker Compose
 - ✅ **CORS Support**: Configurable cross-origin resource sharing per domain
 - ✅ **Template System**: Customizable email templates per website
+- ✅ **Health Monitoring**: API Endpoint for remote health checks
 
 ## Table of Contents
 
