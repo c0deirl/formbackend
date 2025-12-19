@@ -107,7 +107,6 @@ const mailOptions = {
     
     // 4. IMPORTANT: Set Reply-To to the customer's email
     // This allows you to just hit 'Reply' to contact the customer.
-	// THIS COULD BE PROBLEMATIC with some email providers, check their policy if needed. You can comment this out if needed.
     replyTo: email 
 };
 
@@ -132,6 +131,46 @@ const mailOptions = {
     }
 });
 
+// Health Check Endpoint
+app.get('/health', async (req, res) => {
+    try {
+        const healthCheck = {
+            status: 'ok',
+            timestamp: new Date().toISOString(),
+            uptime: process.uptime(),
+            memory: {
+                used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024 * 100) / 100,
+                total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024 * 100) / 100
+            },
+            config: {
+                websites: Object.keys(config.recipients),
+                smtp: config.smtp ? 'configured' : 'missing',
+                turnstile: Object.keys(config.turnstile || {})
+            }
+        };
+
+        // Optional: Test SMTP connection (commented out by default for performance)
+        // try {
+        //     await transporter.verify();
+        //     healthCheck.smtp = 'connected';
+        // } catch (error) {
+        //     healthCheck.smtp = 'connection_error';
+        //     healthCheck.status = 'warning';
+        // }
+
+        res.status(200).json(healthCheck);
+    } catch (error) {
+        console.error('Health check failed:', error);
+        res.status(503).json({
+            status: 'error',
+            timestamp: new Date().toISOString(),
+            error: 'Health check failed'
+        });
+    }
+});
+
+// Start the server
 app.listen(PORT, () => {
     console.log(`Form processing server running on port ${PORT}`);
+    console.log(`Health check available at: http://localhost:${PORT}/health`);
 });
