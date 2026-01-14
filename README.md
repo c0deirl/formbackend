@@ -67,6 +67,10 @@ npm start
 # Access admin interface
 # http://localhost:3000/admin
 ```
+## Screenshots
+
+
+<img width="1260" height="918" alt="Screenshot 2026-01-14 131054" src="https://github.com/user-attachments/assets/4e3fbbca-e321-495a-a1a7-b15082ee8473" />
 
 ## 🔧 Installation
 
