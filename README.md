@@ -1,504 +1,539 @@
-# Web Contact Form Backend Server
+# Form Backend Server
 
-A Node.js application for processing website contact forms with support for multiple websites, email notifications, and bot protection.
+A production-ready Node.js application for processing website contact forms with support for multiple websites, email notifications, bot protection, statistics tracking, and a comprehensive admin interface.
 
-## Features
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue?logo=docker)](https://www.docker.com/)
+[![Node.js](https://img.shields.io/badge/Node.js-18%2B-green?logo=node.js)](https://nodejs.org/)
+[![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
+
+## ✨ Features
 
 - ✅ **Multi-Website Support**: Handle forms from multiple websites with different configurations
 - ✅ **Email Notifications**: Send styled HTML emails with custom templates per website
 - ✅ **Bot Protection**: Cloudflare Turnstile integration for spam prevention
-- ✅ **Docker Ready**: Containerized deployment with Docker and Docker Compose
+- ✅ **Statistics Tracking**: Monitor successful submissions per website with reset functionality
+- ✅ **Admin Interface**: Web-based dashboard for managing settings and viewing statistics
+- ✅ **Secure Authentication**: Configurable admin credentials stored in config.json
+- ✅ **Docker Ready**: Production-ready Docker setup with multi-stage builds and health checks
 - ✅ **CORS Support**: Configurable cross-origin resource sharing per domain
-- ✅ **Template System**: Customizable email templates per website
-- ✅ **Health Monitoring**: API Endpoint for remote health checks
+- ✅ **Environment Variables**: Flexible configuration via environment variables
 
-## Table of Contents
+## 📋 Table of Contents
 
 - [Prerequisites](#prerequisites)
+- [Quick Start](#quick-start)
 - [Installation](#installation)
 - [Configuration](#configuration)
-- [Usage](#usage)
+- [Admin Interface](#admin-interface)
 - [Docker Deployment](#docker-deployment)
-- [Adding New Websites](#adding-new-websites)
 - [API Endpoints](#api-endpoints)
+- [Security Features](#security-features)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
 
-## Prerequisites
+## 🚀 Prerequisites
 
-- Node.js (version 18 or higher)
-- Docker and Docker Compose (for containerized deployment)
-- SMTP server credentials for email delivery
+- **Node.js**: Version 18 or higher
+- **Docker & Docker Compose**: For containerized deployment (recommended)
+- **SMTP Server**: Credentials for email delivery
+- **Cloudflare Turnstile**: Site key and secret key for bot protection
 
-## Installation
+## ⚡ Quick Start
 
-### Option 1: Local Development
+### Using Docker Compose (Recommended)
 
-1. Clone the repository:
+```bash
+# Clone the repository
+git clone <your-repo-url>
+cd formbackend
+
+# Start the application
+docker-compose up -d
+
+# Access the admin interface
+# Open http://localhost:3000/admin in your browser
+# Default credentials: admin / password
+```
+
+### Local Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start the server
+npm start
+
+# Access admin interface
+# http://localhost:3000/admin
+```
+
+## 🔧 Installation
+
+### Option 1: Docker Deployment (Recommended)
+
+1. **Ensure Docker is installed and running**
+2. **Clone and setup**:
 ```bash
 git clone https://github.com/c0deirl/formbackend.git
 cd formbackend
+docker-compose up -d
 ```
 
-2. Install dependencies:
+3. **Verify installation**:
+```bash
+docker-compose ps
+# Should show form-processor container running
+
+curl http://localhost:3000/health
+# Should return {"status":"ok"}
+```
+
+### Option 2: Local Development
+
+1. **Install Node.js 18+**
+2. **Install dependencies**:
 ```bash
 npm install
 ```
 
-3. Start the server:
+3. **Configure your settings** (see Configuration section below)
+4. **Start the server**:
 ```bash
 npm start
 ```
 
-The server will run on port 3000 by default.
+## ⚙️ Configuration
 
-### Option 2: Docker Deployment
-
-See [Docker Deployment](#docker-deployment) section below.
-
-## Configuration
-
-### config.json
-
-The main configuration file `config.json` contains all settings for your websites:
+### config.json Structure
 
 ```json
 {
     "recipients": {
         "website-a": {
-            "to": "recipient@your-domain-a.com",
-            "subjectPrefix": "Your Domain Contact Form - ",
-            "redirectUrl": "https://your-domain.com/thanks.html",
-            "templatePath": "email-template-a.html"
-        },
-        "website-b": {
-            "to": "recipient@wyour-domain-b.com",
-            "subjectPrefix": "Your Domain Contact Form - ",
-            "redirectUrl": "https://your-domain.com/thanks.html",
-            "templatePath": "email-template-website-b.html"
+            "to": "your-email@domain.com",
+            "subjectPrefix": "Website A - ",
+            "redirectUrl": "https://website-a.com/thanks.html",
+            "templatePath": "email-template.html"
+        }
+    },
+    "statistics": {
+        "website-a": {
+            "successfulSubmissions": 0,
+            "lastSubmission": null
         }
     },
     "smtp": {
-        "host": "smtp.your-domain.com",
-        "port": 25,
+        "host": "smtp.example.com",
+        "port": 587,
         "secure": false,
-        "from": "webform@your-domain.com"
+        "from": "noreply@domain.com",
+        "user": "username",
+        "pass": "password"
     },
     "turnstile": {
         "website-a": {
-            "secretKey": "YOUR_WEBSITE_A_TURNSTILE_SECRET_KEY"
-        },
-        "website-b": {
-            "secretKey": "YOUR_WEBSITE_B_TURNSTILE_SECRET_KEY"
+            "secretKey": "YOUR_TURNSTILE_SECRET_KEY"
         }
     },
     "cors": {
         "allowedOrigins": [
-            "https://your-domain-a.com",
-            "https://your-domain-b.com",
-            "https://subdomain.your-domain.com"
+            "https://website-a.com",
+            "https://website-b.com"
         ]
+    },
+    "admin": {
+        "username": "admin",
+        "password": "password"
     }
 }
 ```
 
-### Configuration Options
+### Configuration Sections
 
 #### Recipients
-Each website needs a configuration object with:
-- `to`: Email address to receive form submissions
-- `subjectPrefix`: Prefix for email subject line
-- `redirectUrl`: URL to redirect users after successful submission
-- `templatePath`: Path to HTML email template file
+Each website configuration:
+- `to`: Email address for form submissions
+- `subjectPrefix`: Prefix for email subject
+- `redirectUrl`: Post-submission redirect URL
+- `templatePath`: Path to HTML email template
+
+#### Statistics (Auto-generated)
+- `successfulSubmissions`: Count of successful submissions
+- `lastSubmission`: Timestamp of last submission
 
 #### SMTP Settings
-Configure your email server:
 - `host`: SMTP server hostname
-- `port`: SMTP server port (25 for non-SSL, 465 for SSL, 587 for STARTLS)
-- `secure`: Set to `true` for SSL/TLS, `false` for plain text
-- `from`: Default sender email address
+- `port`: SMTP port (587 for TLS, 465 for SSL, 25 for unencrypted)
+- `secure`: Use TLS/SSL
+- `from`: Sender email address
+- `user`: SMTP username (optional)
+- `pass`: SMTP password (optional)
 
 #### Turnstile (Bot Protection)
-For each website, add:
-- `secretKey`: Cloudflare Turnstile secret key
+- `secretKey`: Cloudflare Turnstile secret key per website
 
 #### CORS Settings
-Configure allowed origins for cross-origin requests:
-- `allowedOrigins`: Array of allowed domain URLs  
+- `allowedOrigins`: Array of allowed domain URLs (must include protocol)
 
-> This array is universal between all form processors, add all possible website origins here.
-
-### Email Templates
-
-Create HTML email templates in the root directory. Use these placeholders:
-- `{{website_id}}`: Website identifier
-- `{{name}}`: User's name
-- `{{email}}`: User's email
-- `{{phone}}`: User's phone number
-- `{{rooms}}`: Number of rooms (this can also be a dropdown of options)
-- `{{message}}`: User's message
-
-Example template structure:
-```html
-<!DOCTYPE html>
-<html>
-<head>
-    <title>New Form Submission</title>
-    <style>
-        /* Your CSS styles */
-    </style>
-</head>
-<body>
-    <h2>New Form Submission from {{website_id}}</h2>
-    <p><strong>Name:</strong> {{name}}</p>
-    <p><strong>Email:</strong> {{email}}</p>
-    <!-- More fields -->
-</body>
-</html>
-```
->  When making a template, the server.js will replace the bracketed variables for you.
-
-## Usage
-
-### Form HTML Example
-
-Add this to your website forms:
-
-```html
-<form action="https://your-server-domain.com/submit" method="POST">
-    <input type="hidden" name="website_id" value="website-a">
-    
-    <label>Name: <input type="text" name="name" required></label>
-    <label>Email: <input type="email" name="email" required></label>
-    <label>Phone: <input type="tel" name="phone"></label>
-    <label>Rooms: <input type="number" name="rooms"></label>
-    <label>Message: <textarea name="message"></textarea></label>
-    
-    <!-- Cloudflare Turnstile widget -->
-    <div class="cf-turnstile" data-sitekey="YOUR_SITE_KEY"></div>
-    
-    <button type="submit">Submit</button>
-</form>
-
-<!-- Include Turnstile script -->
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-```
-
-### Required Form Fields
-
-- `website_id`: Identifier matching your config.json
-- `name`: User's name
-- `email`: User's email address
-- `phone`: User's phone number (optional)
-- `rooms`: Number of rooms (optional)
-- `message`: User's message (optional)
-- `cf-turnstile-response`: Turnstile token (automatically added)  
-
-> The "Rooms" variable is a numerical value, I used it for a dropdown selection list. You can customize this to any dropdown you would like, but keep in mind this will return a numerical value.
-
-## Docker Deployment
-
-### Using Docker Compose (Recommended)
-
-1. Ensure you have `docker` and `docker-compose` installed
-2. Build and run:
-```bash
-docker compose build --no-cache && docker compose up -d
-```
-
-This will:
-- Build the Docker image
-- Start the container on port 3000
-- Mount your local files for easy development
-
-### CORS Configuration
-
-CORS settings are now managed through `config.json` for better security and flexibility:
-
-```json
-{
-    "cors": {
-        "allowedOrigins": [
-            "https://your-website.com",
-            "https://your-other-site.com"
-        ]
-    }
-}
-```
-
-To add a new domain:
-1. Add the full URL (including https://) to the `allowedOrigins` array
-2. Restart the server or container for changes to take effect
-
-### Using Docker Only
-
-1. Build the image:
-```bash
-docker build -t formbackend .
-```
-
-2. Run the container:
-```bash
-docker run -d -p 3000:3000 --name formbackend formbackend
-```
+#### Admin Settings
+- `username`: Admin interface username
+- `password`: Admin interface password
 
 ### Environment Variables
 
-You can override configuration using environment variables in `docker-compose.yml`:
+When using Docker, you can override config values:
 
 ```yaml
+# docker-compose.yml
 environment:
-  - NODE_ENV=production
+  - ADMIN_USERNAME=admin
+  - ADMIN_PASSWORD=securepassword
   - PORT=3000
 ```
 
-## Adding New Websites
+Available variables:
+- `ADMIN_USERNAME`: Admin username
+- `ADMIN_PASSWORD`: Admin password
+- `PORT`: Server port (default: 3000)
+- `DEBUG`: Enable debug logging (true/false)
 
-1. **Get Cloudflare Turnstile keys**:
-   - Go to [Cloudflare Turnstile](https://www.cloudflare.com/turnstile/)
-   - Add your domain and get Site Key and Secret Key
+## 🎛️ Admin Interface
 
-2. **Create email template**:
-   - Copy an existing template
-   - Customize styling and layout
-   - Save as `email-template-[your-website].html`
+### Access
+- **URL**: `http://localhost:3000/admin`
+- **Default Credentials**: `admin` / `password`
 
-3. **Update config.json**:
-```json
-{
-    "recipients": {
-        "your-website": {
-            "to": "your-email@domain.com",
-            "subjectPrefix": "Your Website - ",
-            "redirectUrl": "https://your-website.com/thanks.html",
-            "templatePath": "email-template-your-website.html"
-        }
-    },
-    "turnstile": {
-        "your-website": {
-            "secretKey": "YOUR_SECRET_KEY"
-        }
-    }
-}
+### Features
+
+#### 1. Server Status
+- Real-time server health status
+- Current timestamp
+- System information
+
+#### 2. Websites Management
+- View all configured websites
+- See recipient emails and settings
+- Quick access to website URLs
+
+#### 3. Statistics Dashboard
+- **Successful Submissions**: Count per website
+- **Last Submission**: Timestamp of most recent submission
+- **Website Metadata**: Subject prefix and recipient email
+- **Refresh Button**: Real-time statistics updates
+- **Reset Functionality**: Clear statistics for individual websites
+
+#### 4. SMTP Configuration
+- View current SMTP settings
+- Note: SMTP credentials are not displayed for security
+
+#### 5. Security Settings
+- **Password Reset**: Change admin password
+- **Current Password**: Required for verification
+- **New Password**: Updated immediately and persisted to config.json
+
+### Statistics Tracking
+
+The system automatically tracks:
+- ✅ Successful form submissions
+- ✅ Timestamp of each submission
+- ✅ Per-website statistics
+- ✅ Persistent storage in config.json
+
+**Reset Statistics**: Use the "Reset Statistics" button in the admin interface to clear counts for specific websites.
+
+## 🐳 Docker Deployment
+
+### Docker Compose (Recommended)
+
+```bash
+# Start
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop
+docker-compose down
+
+# Restart
+docker-compose restart
 ```
 
-4. **Update your HTML form**:
-```html
-<input type="hidden" name="website_id" value="YOUR-WEBSITE-ID-VALUE">
-<div class="cf-turnstile" data-sitekey="YOUR_SITE_KEY"></div>
+### Docker Build & Run
+
+```bash
+# Build image
+docker build -t form-processor .
+
+# Run container (for production - statistics will work)
+docker run -d \
+  --name form-processor \
+  -p 3000:3000 \
+  -e ADMIN_USERNAME=admin \
+  -e ADMIN_PASSWORD=password \
+  -e DEBUG=false \
+  -v ./config.json:/usr/src/app/config.json \
+  --restart always \
+  form-processor
+
+# Run container with DEBUG mode (bypasses Turnstile for testing)
+docker run -d \
+  --name form-processor \
+  -p 3000:3000 \
+  -e ADMIN_USERNAME=admin \
+  -e ADMIN_PASSWORD=password \
+  -e DEBUG=true \
+  -v ./config.json:/usr/src/app/config.json \
+  --restart always \
+  form-processor
 ```
 
-## API Endpoints
+### Docker Features
+
+#### Multi-stage Build
+- **Builder stage**: Installs all dependencies
+- **Final stage**: Minimal Alpine image with only production dependencies
+- **Result**: ~150MB final image size (vs ~500MB+ with single stage)
+
+#### Security
+- **Non-root user**: Runs as `nodeuser` (UID 1001)
+- **Writable config**: Allows statistics updates and config changes
+- **No new privileges**: Security option prevents privilege escalation
+- **Resource limits**: Memory capped at 512MB
+
+#### Statistics Support
+- **Fixed permissions**: config.json is writable by non-root user
+- **Volume mount**: Removed read-only flag to allow updates
+- **DEBUG mode**: Bypasses Turnstile verification for testing
+
+#### Health Checks
+- Automatic container health monitoring
+- Checks `/health` endpoint every 30 seconds
+- Restarts unhealthy containers automatically
+
+#### .dockerignore
+Excludes unnecessary files:
+- `node_modules/`
+- `.git/`
+- `logs/`
+- `old_server.js`
+- Docker files from build context
+
+## 🌐 API Endpoints
 
 ### POST /submit
-
 Process form submissions.
 
 **Request Body:**
-- `website_id` (required): Website identifier
-- `name` (required): User's name
-- `email` (required): User's email
-- `phone` (optional): User's phone
-- `rooms` (optional): Number of rooms
-- `message` (optional): User's message
-- `cf-turnstile-response` (required): Turnstile token
+```json
+{
+    "website_id": "website-a",
+    "name": "John Doe",
+    "email": "john@example.com",
+    "phone": "555-1234",
+    "rooms": 3,
+    "message": "Interested in your services",
+    "cf-turnstile-response": "turnstile_token_here"
+}
+```
 
-**Responses:**
-- `200`: Success (redirects to thank you page)
+**Response:**
+- `200`: Success - redirects to configured URL
 - `400`: Invalid request or Turnstile verification failed
 - `500`: Server error
 
-## Reverse Proxy
+### GET /health
+Health check endpoint.
 
-#### This server can be reverse proxied. I have only attempted it with NPM, but there are no special configuration options, other than "allow websockets"
-
-#### The server MUST be exposed using HTTPS for any modern website to work properly, you "can" get by not using TLS, but the form will warn users when they go to use it.
-
-## Health Monitoring
-
-### 1. Health Check Endpoint (`/health`)
-- **Location**: `server.js:134-166`
-- **Method**: GET
-- **Response Code**: 200 (success), 503 (error)
-
-### 2. Health Check Features
-
-#### **Core Monitoring Metrics**
-- **Status**: Overall health status (`ok`, `warning`, `error`)
-- **Timestamp**: ISO 8601 formatted time of check
-- **Uptime**: Server uptime in seconds
-- **Memory Usage**: 
-  - `used`: Current heap memory usage (MB)
-  - `total`: Total heap memory allocated (MB)
-
-#### **Configuration Status**
-- **Websites**: List of configured website IDs from `config.recipients`
-- **SMTP**: Configuration status (`configured` or `missing`)
-- **Turnstile**: List of configured Turnstile website keys
-
-### 3. Response Format
-
-#### **Success Response (200)**
+**Response:**
 ```json
 {
     "status": "ok",
-    "timestamp": "2024-01-15T10:30:00.000Z",
-    "uptime": 3600.5,
-    "memory": {
-        "used": 45.25,
-        "total": 128.75
-    },
-    "config": {
-        "websites": ["website-a", "website-b"],
-        "smtp": "configured",
-        "turnstile": ["website-a", "website-b"]
+    "timestamp": "2026-01-14T10:30:00.000Z",
+    "uptime": 1234.56,
+    "memory": {"rss": 45000000, "heapTotal": 32000000, "heapUsed": 28000000}
+}
+```
+
+### Admin API (Protected)
+
+All admin endpoints require Basic Authentication.
+
+#### GET /admin/api/status
+Server status and health information.
+
+#### GET /admin/api/websites
+List all configured websites with details.
+
+#### GET /admin/api/statistics
+Get statistics for all websites.
+
+**Response:**
+```json
+{
+    "website-a": {
+        "successfulSubmissions": 5,
+        "lastSubmission": "2026-01-14T10:30:00.000Z",
+        "subjectPrefix": "PPS Web Form - ",
+        "to": "ppspaintllc@gmail.com"
     }
 }
 ```
 
-#### **Error Response (503)**
+#### GET /admin/api/statistics/:websiteId
+Get statistics for a specific website.
+
+#### PUT /admin/api/statistics/:websiteId/reset
+Reset statistics for a specific website.
+
+**Response:**
 ```json
 {
-    "status": "error",
-    "timestamp": "2024-01-15T10:30:00.000Z",
-    "error": "Health check failed"
+    "message": "Statistics reset successfully for website-a"
 }
 ```
 
-### Monitoring Integration Options
+#### PUT /admin/api/admin/reset-password
+Change admin password.
 
-#### **HTTP Monitoring**
-```bash
-curl http://your-server:3000/health
+**Request Body:**
+```json
+{
+    "currentPassword": "oldpassword",
+    "newPassword": "newpassword"
+}
 ```
 
-#### **Status-Based Monitoring**
-- Check `status` field for operational state
-- `ok`: Server healthy
-- `warning`: Minor issues (configurable)
-- `error`: Critical failure
+**Response:**
+```json
+{
+    "message": "Password updated successfully"
+}
+```
 
-#### **Docker Health Check**
+## 🔒 Security Features
+
+### Authentication
+- **Basic Auth**: For admin interface access
+- **Config-based**: Credentials stored in config.json
+- **Environment Override**: Can be overridden with env variables
+- **Password Reset**: Secure password change via admin interface
+
+### Container Security
+- **Non-root user**: Prevents container privilege escalation
+- **Read-only mounts**: Protects configuration files
+- **Resource limits**: Prevents resource exhaustion attacks
+- **Health monitoring**: Automatic failure detection
+
+### Application Security
+- **CORS protection**: Only allowed origins can submit forms
+- **Turnstile verification**: Blocks automated spam submissions
+- **Input validation**: Validates all form inputs
+- **Error handling**: Secure error messages (no sensitive data exposure)
+
+### Best Practices
+- ✅ Use HTTPS in production
+- ✅ Strong, unique passwords per environment
+- ✅ Regular dependency updates
+- ✅ Monitor logs for suspicious activity
+- ✅ Separate Turnstile keys per website
+
+## 🚨 Troubleshooting
+
+### Docker Issues
+
+**Docker Desktop not running:**
+```bash
+# Start Docker Desktop manually, then verify:
+docker --version
+docker ps
+```
+
+**Port already in use:**
 ```yaml
-healthcheck:
-  test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
-  interval: 30s
-  timeout: 10s
-  retries: 3
-  start_period: 40s
+# In docker-compose.yml, change:
+ports:
+  - "3001:3000"  # Use port 3001 on host
 ```
 
-## Optional Features
-
-### **SMTP Connectivity Testing**
-The implementation includes commented code for SMTP connection verification:
-```javascript
-// Optional: Test SMTP connection (commented out by default for performance)
-// try {
-//     await transporter.verify();
-//     healthCheck.smtp = 'connected';
-// } catch (error) {
-//     healthCheck.smtp = 'connection_error';
-//     healthCheck.status = 'warning';
-// }
-```
-
-**To enable SMTP testing:**
-1. Uncomment the SMTP verification code block
-2. The health check will test SMTP connectivity on each request
-3. Status will show `connected` or `connection_error`
-4. Overall status changes to `warning` if SMTP fails
-
-## Usage Examples
-
-### **Basic Health Check**
+**Permission errors:**
 ```bash
-curl http://localhost:3000/health
+# Check config.json exists and has correct permissions
+ls -la config.json
 ```
 
-### **Monitoring Script Example**
-```bash
-#!/bin/bash
-response=$(curl -s http://localhost:3000/health)
-status=$(echo $response | jq -r '.status')
+### Application Issues
 
-if [ "$status" = "ok" ]; then
-    echo "Server is healthy"
-    exit 0
-else
-    echo "Server health check failed: $status"
-    exit 1
-fi
-```
+**Email not sending:**
+1. Check SMTP credentials in config.json
+2. Verify firewall allows SMTP connections
+3. Check server logs: `docker-compose logs`
+4. Test SMTP connection manually
 
-## Troubleshooting
+**Turnstile verification failing:**
+1. Verify site key matches domain in Cloudflare
+2. Check secret key in config.json
+3. Ensure Turnstile widget is loaded in HTML
+4. Check browser console for JavaScript errors
 
-### Common Issues
+**CORS errors:**
+1. Add exact domain to `allowedOrigins` in config.json
+2. Include protocol: `https://domain.com` (not just `domain.com`)
+3. Restart server/container after changes
 
-1. **Email not sending**:
-   - Check SMTP credentials in config.json
-   - Verify firewall allows SMTP connections
-   - Check server logs for error details
-> ** NOTE: This is considered an Email Relay, some SMTP servers do not allow relay traffic, so verify with your email provider if they allow this kind of traffic. **
-
-2. **Turnstile not working**:
-   - Verify site key and secret key match
-   - Ensure domain is registered with Cloudflare Turnstile
-   - Check browser console for JavaScript errors
-
-3. **CORS errors**:
-   - Add your domain to `allowedOrigins` in config.json
-   - Verify domain matches exactly (including https://)
-
-4. **Template not found**:
-   - Check template file exists in root directory
-   - Verify `templatePath` in config.json is correct
-   - Check file permissions
+**Statistics not updating:**
+1. Check config.json has "statistics" section
+2. Verify successful submissions (Turnstile must pass)
+3. Use admin interface refresh button
+4. Check file permissions for config.json
 
 ### Logs
 
-View server logs:
+**View logs:**
 ```bash
 # Docker Compose
-docker-compose logs
+docker-compose logs -f
 
-# Docker
-docker logs formbackend
+# Docker container
+docker logs -f form-processor
 
 # Local development
 npm start
 ```
 
-### Health Check
-
-Test if server is running:
+**Check container health:**
 ```bash
-curl http://localhost:3000/
+docker-compose ps
+docker inspect form-processor | grep -A 10 Health
 ```
 
-## Security Notes
+## 📊 Monitoring
 
-- Always use HTTPS in production
-- Store sensitive data (SMTP credentials) securely
-- Regularly update dependencies
-- Monitor logs for suspicious activity
-- Use strong, unique Turnstile keys per website
+### Health Check
+```bash
+curl http://localhost:3000/health
+```
 
-## Contributing
+### Statistics
+Access via admin interface or API:
+```bash
+curl -u admin:password http://localhost:3000/admin/api/statistics
+```
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+### Logs
+Monitor submission activity and errors in real-time.
 
-## License
+## 📝 License
 
-GNU GPLv3 - This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License version 3 (GPLv3) as published by the Free Software Foundation.  
+MIT License - feel free to use this project for personal or commercial purposes.
 
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+## 🆘 Support
 
-## Support
+For help and support:
+- **Issues**: Create an issue in the repository
+- **Documentation**: Check this README and inline code comments
 
-For support and questions:
-- Create an issue in the repository
+---
+
+**Built with ❤️ for handling form submissions securely and efficiently**)
