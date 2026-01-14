@@ -1,37 +1,67 @@
 {
     "recipients": {
         "website-a": {
-            "to": "recipient@your-domain.com",
-            "subjectPrefix": "Your Website Contact Form - ",
-            "redirectUrl": "https://your-domain.com/thanks.html",
-            "templatePath": "email-template-website-a.html"
+            "to": "YOUR_EMAIL@gmail.com",
+            "subjectPrefix": "Web Form - ",
+            "redirectUrl": "https://YOUR_DOMAIN.com/thanks.html",
+            "templatePath": "email-template.html"
         },
         "website-b": {
-            "to": "support@website-b-domain.com",
-            "subjectPrefix": "Your Website Contact Form - ",
-            "redirectUrl": "https://your-domain.com/thanks.html",
+            "to": "email2@domain.com",
+            "subjectPrefix": "Website Contact Form - ",
+            "redirectUrl": "https://YOURDOMAIN_2.com/thanks.html",
             "templatePath": "email-template-website-b.html"
+        },
+        "website-c": {
+            "to": "email3@domain.com",
+            "subjectPrefix": "Web Form - ",
+            "redirectUrl": "https://DOMAIN_3.com/thanks.html",
+            "templatePath": "email-template-website-c.html"
+        }
+    },
+    "statistics": {
+        "website-a": {
+            "successfulSubmissions": 5,
+            "lastSubmission": "2026-01-14T14:14:06.266Z"
+        },
+        "website-b": {
+            "successfulSubmissions": 1,
+            "lastSubmission": "2026-01-14T09:15:00.000Z"
+        },
+        "website-c": {
+            "successfulSubmissions": 0,
+            "lastSubmission": null
         }
     },
     "smtp": {
         "host": "smtp.yourdomain.com",
         "port": 25,
         "secure": false,
-        "from": "webform@your-domain.com" 
+        "from": "user@domain.com",
+        "user": "",
+        "pass": ""
     },
     "turnstile": {
         "website-a": {
-            "secretKey": "YOUR_WEBSITE_A_TURNSTILE_SECRET_KEY"
+            "secretKey": "SECRETKEY1"
         },
         "website-b": {
-            "secretKey": "YOUR_WEBSITE_B_TURNSTILE_SECRET_KEY"
+            "secretKey": "SECRETKEY2"
+        },
+        "website-c": {
+            "secretKey": "SECRETKEY3"
         }
     },
     "cors": {
         "allowedOrigins": [
-            "https://your-domain-a.com",
-            "https://your-domain-b.com",
-            "https://subdomain.your-domain.com"
+            "https://DOMAIN1.com",
+            "https://DOMAIN2.com",
+            "https://DOMAIN3.com",
+            "https://DOMAIN4.com"
         ]
+    },
+    "admin": {
+        "username": "admin",
+        "password": "password"
     }
 }

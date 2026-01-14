@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form Backend Admin</title>
+    <style>
+        :root {
+            --bg-primary: #f8f9fa;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #e9ecef;
+            --text-primary: #212529;
+            --text-secondary: #6c757d;
+            --border-color: #dee2e6;
+            --accent-primary: #4f46e5;
+            --accent-hover: #4338ca;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --accent-primary: #6366f1;
+            --accent-hover: #818cf8;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.025em;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .theme-toggle {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-tertiary);
+            transform: translateY(-1px);
+        }
+
+        .section {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .status-card {
+            background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+
+        .status-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .status-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+        }
+
+        .status-value {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .status-ok {
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .status-error {
+            color: var(--danger);
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.375rem;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="url"],
+        input[type="number"],
+        input[type="password"] {
+            width: 100%;
+            max-width: 400px;
+            padding: 0.625rem 0.875rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        input[type="checkbox"] {
+            width: 1.25rem;
+            height: 1.25rem;
+            cursor: pointer;
+            accent-color: var(--accent-primary);
+        }
+
+        button {
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            padding: 0.625rem 1.25rem;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        button:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .website-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .website-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .website-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--accent-primary);
+        }
+
+        .website-card h4 {
+            margin: 0 0 0.75rem 0;
+            color: var(--accent-primary);
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .website-card div {
+            margin-bottom: 0.375rem;
+            font-size: 0.875rem;
+        }
+
+        .website-card strong {
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .website-card a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .website-card a:hover {
+            color: var(--accent-hover);
+            text-decoration: underline;
+        }
+
+        pre.json {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            overflow-x: auto;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            max-height: 300px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .string { color: #10b981; }
+        .number { color: #3b82f6; }
+        .boolean { color: #8b5cf6; }
+        .null { color: #6b7280; }
+        .key { color: #f59e0b; }
+
+        [data-theme="dark"] .string { color: #34d399; }
+        [data-theme="dark"] .number { color: #60a5fa; }
+        [data-theme="dark"] .boolean { color: #a78bfa; }
+        [data-theme="dark"] .null { color: #9ca3af; }
+        [data-theme="dark"] .key { color: #fbbf24; }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .checkbox-group label {
+            margin-bottom: 0;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .website-list {
+                grid-template-columns: 1fr;
+            }
+
+            .status-grid {
+                grid-template-columns: 1fr;
+            }
+
+            input[type="text"],
+            input[type="email"],
+            input[type="url"],
+            input[type="number"],
+            input[type="password"] {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <img src="/logo.png" alt="Logo" style="height: 40px; width: auto; object-fit: contain;" />
+                <h1>Admin Interface</h1>
+            </div>
+            <button class="theme-toggle" id="themeToggle">
+                <span id="themeIcon">🌙</span>
+                <span id="themeText">Dark Mode</span>
+            </button>
+        </div>
+
+        <div class="section">
+            <h2>Status</h2>
+            <div id="status"></div>
+        </div>
+
+        <div class="section">
+            <h2>Websites</h2>
+            <div id="websites"></div>
+            <h3>Add New Website</h3>
+            <form id="addForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>ID</label>
+                        <input type="text" name="id" required placeholder="website-id" />
+                    </div>
+                    <div class="form-group">
+                        <label>To Email</label>
+                        <input type="email" name="to" required placeholder="admin@example.com" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Subject Prefix</label>
+                        <input type="text" name="subjectPrefix" required placeholder="New form submission" />
+                    </div>
+                    <div class="form-group">
+                        <label>Redirect URL</label>
+                        <input type="url" name="redirectUrl" required placeholder="https://example.com/thank-you" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Template Path</label>
+                        <input type="text" name="templatePath" required placeholder="/path/to/template.html" />
+                    </div>
+                    <div class="form-group">
+                        <label>Turnstile Key (optional)</label>
+                        <input type="text" name="turnstileKey" placeholder="0x4AAAAA..." />
+                    </div>
+                </div>
+                <button type="submit">Add Website</button>
+            </form>
+        </div>
+
+        <div class="section">
+            <h2>SMTP Settings</h2>
+            <form id="smtpForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Host</label>
+                        <input type="text" name="host" required placeholder="smtp.example.com" />
+                    </div>
+                    <div class="form-group">
+                        <label>Port</label>
+                        <input type="number" name="port" required placeholder="587" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>From Email</label>
+                        <input type="email" name="from" required placeholder="noreply@example.com" />
+                    </div>
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" name="secure" id="secureCheck" />
+                        <label for="secureCheck">Secure Connection (TLS/SSL)</label>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Username (optional)</label>
+                        <input type="text" name="user" placeholder="SMTP username" />
+                    </div>
+                    <div class="form-group">
+                        <label>Password (optional)</label>
+                        <input type="password" name="pass" placeholder="SMTP password" />
+                    </div>
+                </div>
+                <button type="submit">Save SMTP Settings</button>
+            </form>
+            <h3>Current SMTP Configuration</h3>
+            <pre class="json" id="smtpStatus"></pre>
+        </div>
+
+        <div class="section">
+            <h2>Website Statistics</h2>
+            <div id="statistics"></div>
+            <div style="margin-top: 1rem;">
+                <button onclick="loadStatistics()" style="background: var(--accent-primary);">Refresh Statistics</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Security Settings</h2>
+            <h3>Reset Admin Password</h3>
+            <form id="passwordForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Current Password</label>
+                        <input type="password" name="currentPassword" required placeholder="Enter current password" />
+                    </div>
+                    <div class="form-group">
+                        <label>New Password</label>
+                        <input type="password" name="newPassword" required placeholder="Enter new password" />
+                    </div>
+                </div>
+                <button type="submit" style="background: var(--danger);">Update Password</button>
+            </form>
+            <div id="passwordResult" style="margin-top: 1rem;"></div>
+        </div>
+    </div>
+    <script>
+        const auth = 'Basic ' + btoa('admin:password');
+        function syntaxHighlight(json) {
+            if (typeof json != 'string') {
+                json = JSON.stringify(json, undefined, 2);
+            }
+            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return json.replace(/("(\\u[\da-fA-F]{4}|\\[^u]|[^\\"]*)"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?)/g, function (match) {
+                let cls = 'number';
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = 'key';
+                    } else {
+                        cls = 'string';
+                    }
+                } else if (/true|false/.test(match)) {
+                    cls = 'boolean';
+                } else if (/null/.test(match)) {
+                    cls = 'null';
+                }
+                return '<span class="' + cls + '">' + match + '</span>';
+            });
+        }
+        async function loadStatus() {
+            const res = await fetch('/admin/api/status', { headers: { Authorization: auth } });
+            const data = await res.json();
+            renderStatus(data);
+        }
+
+        function renderStatus(status) {
+            const container = document.getElementById('status');
+            const uptime = Math.floor(status.uptime);
+            const memoryUsed = status.memory.used;
+            const memoryTotal = status.memory.total;
+            const config = status.config;
+            const smtp = config.smtp || {};
+            const html = `<div class="status-card">
+                <div class="status-grid">
+                    <div class="status-item">
+                        <span class="status-label">Server Status</span>
+                        <span class="status-value ${status.status === 'ok' ? 'status-ok' : 'status-error'}">${status.status.toUpperCase()}</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Port</span>
+                        <span class="status-value">${status.port}</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Uptime</span>
+                        <span class="status-value">${uptime}s</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Memory</span>
+                        <span class="status-value">${memoryUsed} / ${memoryTotal} MB</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Websites</span>
+                        <span class="status-value">${config.websites.length}</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Turnstile Keys</span>
+                        <span class="status-value">${config.turnstile.length}</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">SMTP Host</span>
+                        <span class="status-value">${smtp.host || 'Not set'}</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">SMTP Port</span>
+                        <span class="status-value">${smtp.port || 'N/A'}</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">SMTP Secure</span>
+                        <span class="status-value">${smtp.secure ? 'Yes' : 'No'}</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">SMTP From</span>
+                        <span class="status-value">${smtp.from || 'Not set'}</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Last Updated</span>
+                        <span class="status-value">${new Date(status.timestamp).toLocaleString()}</span>
+                    </div>
+                </div>
+            </div>`;
+            container.innerHTML = html;
+        }
+        async function loadWebsites() {
+            const res = await fetch('/admin/api/websites', { headers: { Authorization: auth } });
+            const data = await res.json();
+            renderWebsites(data);
+        }
+
+        function renderWebsites(websites) {
+            const container = document.getElementById('websites');
+            if (!websites || Object.keys(websites).length === 0) {
+                container.innerHTML = '<div class="empty-state">No websites configured yet. Add your first website below.</div>';
+                return;
+            }
+            const list = Object.entries(websites).map(([id, cfg]) => {
+                const turnstileKey = cfg.turnstileKey ? `<div><strong>Turnstile:</strong> ${cfg.turnstileKey}</div>` : '';
+                return `<div class="website-card">
+                    <h4>${id}</h4>
+                    <div><strong>To:</strong> ${cfg.to}</div>
+                    <div><strong>Subject:</strong> ${cfg.subjectPrefix}</div>
+                    <div><strong>Redirect:</strong> <a href="${cfg.redirectUrl}" target="_blank">${cfg.redirectUrl}</a></div>
+                    <div><strong>Template:</strong> ${cfg.templatePath}</div>
+                    ${turnstileKey}
+                </div>`;
+            }).join('');
+            container.innerHTML = `<div class="website-list">${list}</div>`;
+        }
+        document.getElementById('addForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            const payload = {
+                id: formData.get('id'),
+                config: {
+                    to: formData.get('to'),
+                    subjectPrefix: formData.get('subjectPrefix'),
+                    redirectUrl: formData.get('redirectUrl'),
+                    templatePath: formData.get('templatePath')
+                }
+            };
+            const turnstileKey = formData.get('turnstileKey');
+            if (turnstileKey) payload.config.turnstileKey = turnstileKey;
+            const res = await fetch('/admin/api/websites', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: auth },
+                body: JSON.stringify(payload)
+            });
+            const result = await res.json();
+            alert(JSON.stringify(result));
+            loadWebsites();
+        });
+        // Load and handle SMTP settings
+        async function loadSmtp() {
+            const res = await fetch('/admin/api/smtp', { headers: { Authorization: auth } });
+            if (!res.ok) return;
+            const data = await res.json();
+            document.getElementById('smtpStatus').innerHTML = syntaxHighlight(data);
+            // Populate form fields with current values
+            document.querySelector('#smtpForm input[name="host"]').value = data.host || '';
+            document.querySelector('#smtpForm input[name="port"]').value = data.port || '';
+            document.querySelector('#smtpForm input[name="secure"]').checked = !!data.secure;
+            document.querySelector('#smtpForm input[name="from"]').value = data.from || '';
+            document.querySelector('#smtpForm input[name="user"]').value = data.user || '';
+            document.querySelector('#smtpForm input[name="pass"]').value = data.pass || '';
+        }
+
+        async function loadStatistics() {
+            const res = await fetch('/admin/api/statistics', { headers: { Authorization: auth } });
+            if (!res.ok) {
+                document.getElementById('statistics').innerHTML = '<div class="empty-state">Failed to load statistics</div>';
+                return;
+            }
+            const data = await res.json();
+            renderStatistics(data);
+        }
+
+        function renderStatistics(stats) {
+            const container = document.getElementById('statistics');
+            if (!stats || Object.keys(stats).length === 0) {
+                container.innerHTML = '<div class="empty-state">No statistics available yet. Form submissions will appear here.</div>';
+                return;
+            }
+
+            const statsHtml = Object.entries(stats).map(([id, stat]) => {
+                const lastSubmission = stat.lastSubmission 
+                    ? new Date(stat.lastSubmission).toLocaleString() 
+                    : 'Never';
+                
+                return `<div class="website-card">
+                    <h4>${stat.name || id}</h4>
+                    <div><strong>Website ID:</strong> ${id}</div>
+                    <div><strong>Email:</strong> ${stat.email}</div>
+                    <div><strong>Successful Submissions:</strong> <span style="color: var(--success); font-weight: bold;">${stat.successfulSubmissions}</span></div>
+                    <div><strong>Last Submission:</strong> ${lastSubmission}</div>
+                    <div style="margin-top: 0.75rem;">
+                        <button onclick="resetStatistics('${id}')" style="background: var(--danger); padding: 0.4rem 0.8rem; font-size: 0.85rem;">Reset Counter</button>
+                    </div>
+                </div>`;
+            }).join('');
+
+            container.innerHTML = `<div class="website-list">${statsHtml}</div>`;
+        }
+
+        async function resetStatistics(websiteId) {
+            if (!confirm(`Are you sure you want to reset statistics for "${websiteId}"? This cannot be undone.`)) {
+                return;
+            }
+
+            const res = await fetch(`/admin/api/statistics/${websiteId}/reset`, {
+                method: 'PUT',
+                headers: { Authorization: auth }
+            });
+
+            if (res.ok) {
+                alert('Statistics reset successfully');
+                loadStatistics();
+            } else {
+                alert('Failed to reset statistics');
+            }
+        }
+        document.getElementById('smtpForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            const payload = {
+                host: formData.get('host'),
+                port: Number(formData.get('port')),
+                secure: formData.get('secure') === 'on',
+                from: formData.get('from')
+            };
+            // Only include user/pass if provided
+            const user = formData.get('user');
+            const pass = formData.get('pass');
+            if (user) payload.user = user;
+            if (pass) payload.pass = pass;
+            const res = await fetch('/admin/api/smtp', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', Authorization: auth },
+                body: JSON.stringify(payload)
+            });
+            const result = await res.json();
+            alert(JSON.stringify(result));
+            loadSmtp();
+        });
+
+        // Password reset form handler
+        document.getElementById('passwordForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            const currentPassword = formData.get('currentPassword');
+            const newPassword = formData.get('newPassword');
+            
+            const resultDiv = document.getElementById('passwordResult');
+            resultDiv.innerHTML = '';
+            
+            if (newPassword.length < 4) {
+                resultDiv.innerHTML = '<div style="color: var(--danger);">Password must be at least 4 characters</div>';
+                return;
+            }
+            
+            const res = await fetch('/admin/api/admin/reset-password', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', Authorization: auth },
+                body: JSON.stringify({ currentPassword, newPassword })
+            });
+            
+            const result = await res.json();
+            
+            if (res.ok) {
+                resultDiv.innerHTML = '<div style="color: var(--success);">✓ ' + result.message + '</div>';
+                form.reset();
+                // Update the auth token for future requests
+                const newAuth = 'Basic ' + btoa('admin:' + newPassword);
+                // Note: User will need to re-login with new password for the current session
+                setTimeout(() => {
+                    alert('Password updated! You will need to re-login with your new password.');
+                }, 500);
+            } else {
+                resultDiv.innerHTML = '<div style="color: var(--danger);">✗ ' + result.error + '</div>';
+            }
+        });
+
+        // Theme toggle functionality
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeButton(savedTheme);
+        }
+
+        function updateThemeButton(theme) {
+            const icon = document.getElementById('themeIcon');
+            const text = document.getElementById('themeText');
+            if (theme === 'dark') {
+                icon.textContent = '☀️';
+                text.textContent = 'Light Mode';
+            } else {
+                icon.textContent = '🌙';
+                text.textContent = 'Dark Mode';
+            }
+        }
+
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeButton(newTheme);
+        });
+
+        // Initial load calls
+        initTheme();
+        loadStatus();
+        loadWebsites();
+        loadSmtp();
+        loadStatistics();
+    </script>
+</body>
+</html>
