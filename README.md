@@ -67,6 +67,63 @@ npm start
 # Access admin interface
 # http://localhost:3000/admin
 ```
+
+
+### Example email template structure:
+
+```
+<!DOCTYPE html>
+<html>
+<head>
+    <title>New Form Submission</title>
+    <style>
+        /* Your CSS styles */
+    </style>
+</head>
+<body>
+    <h2>New Form Submission from {{website_id}}</h2>
+    <p><strong>Name:</strong> {{name}}</p>
+    <p><strong>Email:</strong> {{email}}</p>
+    <!-- More fields -->
+</body>
+</html>
+```
+>  When making a template, the server.js will replace the bracketed variables for you.
+
+
+### Website Contact Form HTML Example
+
+Add this to your website forms:
+
+```html
+
+<form action="https://your-server-domain.com/submit" method="POST">
+    <input type="hidden" name="website_id" value="website-a">
+    <label>Name: <input type="text" name="name" required></label>
+    <label>Email: <input type="email" name="email" required></label>
+    <label>Phone: <input type="tel" name="phone"></label>
+    <label>Rooms: <input type="number" name="rooms"></label>
+    <label>Message: <textarea name="message"></textarea></label>
+    <!-- Cloudflare Turnstile widget -->
+    <div class="cf-turnstile" data-sitekey="YOUR_SITE_KEY"></div>
+    <button type="submit">Submit</button>
+</form>
+<!-- Include Turnstile script -->
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+```
+
+### Required Form Fields
+
+- `website_id`: Identifier matching your config.json
+- `name`: User's name
+- `email`: User's email address
+- `phone`: User's phone number (optional)
+- `rooms`: Number of rooms (optional)
+- `message`: User's message (optional)
+- `cf-turnstile-response`: Turnstile token (automatically added)  
+
+> The "Rooms" variable is a numerical value, I used it for a dropdown selection list. You can customize this to any dropdown you would like, but keep in mind this will return a numerical value.
+
 ## Screenshots
 
 
