@@ -53,6 +53,14 @@ docker-compose up -d
 # Access the admin interface
 # Open http://localhost:3000/admin in your browser
 # Default credentials: admin / password
+# This service must be exposed to the internet to work with external websites
+# Configure the service with the config.json ahead of time, or use the web interface to add your website config
+```
+## Container must be restarted in order for changes to take effect.
+
+```bash
+docker compose down
+docker compose up -d
 ```
 
 ### Local Development
