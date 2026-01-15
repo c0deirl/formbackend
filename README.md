@@ -118,7 +118,7 @@ Add this to your website forms:
 - `name`: User's name
 - `email`: User's email address
 - `phone`: User's phone number (optional)
-- `rooms`: Number of rooms (optional)
+- `rooms`: This is a dropdown of "options", see below (optional)
 - `message`: User's message (optional)
 - `cf-turnstile-response`: Turnstile token (automatically added)  
 
