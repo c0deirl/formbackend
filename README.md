@@ -105,7 +105,7 @@ Add this to your website forms:
 
 ```html
 
-<form action="https://your-server-domain.com/submit" method="POST">
+<form id="contactForm" action="https://your-server-domain.com/submit" method="POST">
     <input type="hidden" name="website_id" value="website-a">
     <label>Name: <input type="text" name="name" required></label>
     <label>Email: <input type="email" name="email" required></label>
@@ -118,6 +118,45 @@ Add this to your website forms:
 </form>
 <!-- Include Turnstile script -->
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+<script>
+  // Form validation and submission
+        document.addEventListener('DOMContentLoaded', function() {
+            const contactForm = document.getElementById('contactForm');
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const name = document.getElementById('name').value.trim();
+                    const email = document.getElementById('email').value.trim();
+                    const phone = document.getElementById('phone').value.trim();
+                    const service = document.getElementById('service').value;
+                    const message = document.getElementById('message').value.trim();
+
+                    if (!name || !email || !phone || !message) {
+                        alert('Please fill in all required fields.');
+                        return false;
+                    }
+
+                    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                        alert('Please enter a valid email address.');
+                        return false;
+                    }
+
+                    if (!/^\d{10,}$/.test(phone.replace(/[^0-9]/g, ''))) {
+                        alert('Please enter a valid phone number (10 digits minimum).');
+                        return false;
+                    }
+
+                    // Check if Turnstile challenge was completed
+                    const turnstileResponse = document.querySelector('input[name="cf-turnstile-response"]');
+                    const token = turnstileResponse ? turnstileResponse.value : '';
+                    
+                    if (!token) {
+                        alert('Please complete the security verification.');
+                        return false;
+                    }
+</script>
 ```
 
 ### Required Form Fields
