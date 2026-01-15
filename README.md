@@ -44,7 +44,7 @@ A production-ready Node.js application for processing website contact forms with
 
 ```bash
 # Clone the repository
-git clone <your-repo-url>
+git clone https://github.com/c0deirl/formbackend.git
 cd formbackend
 
 # Start the application
