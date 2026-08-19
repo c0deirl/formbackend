@@ -311,34 +311,68 @@ Available variables:
 ### Access
 - **URL**: `http://localhost:3000/admin`
 - **Default Credentials**: `admin` / `password`
+- **Environment overrides**: `ADMIN_USERNAME` and `ADMIN_PASSWORD` can override config.json values at startup.
+- **Protection**: The admin UI and all `/admin/api` endpoints are protected by Basic Auth. Static admin assets are served only after successful authentication.
 
 ### Features
 
 #### 1. Server Status
-- Real-time server health status
-- Current timestamp
-- System information
+- Real-time server health and uptime
+- Memory and process metrics
+- Summary of configured websites and turnstile keys
 
-#### 2. Websites Management
-- View all configured websites
-- See recipient emails and settings
-- Quick access to website URLs
+#### 2. Websites Management (CRUD)
+- List, add, edit, and remove website configurations from the UI
+- Each website entry includes recipient email, subject prefix, redirect URL and an editable Turnstile key
+- Adding/updating a website auto-adds the redirect origin to CORS allowed origins so forms work immediately
 
 #### 3. Statistics Dashboard
-- **Successful Submissions**: Count per website
-- **Last Submission**: Timestamp of most recent submission
-- **Website Metadata**: Subject prefix and recipient email
-- **Refresh Button**: Real-time statistics updates
-- **Reset Functionality**: Clear statistics for individual websites
+- Per-website successful submission counts and last-submission timestamps
+- Refresh button for live updates
+- Reset statistics per website (persists to config.json)
 
 #### 4. SMTP Configuration
-- View current SMTP settings
-- Note: SMTP credentials are not displayed for security
+- View and update SMTP settings from the admin UI
+- Password preservation: if password is omitted in an update, the existing SMTP password is retained
+- Transporter is rebuilt immediately after SMTP changes so emails use new settings without restart
 
-#### 5. Security Settings
-- **Password Reset**: Change admin password
-- **Current Password**: Required for verification
-- **New Password**: Updated immediately and persisted to config.json
+#### 5. Email Templates
+- Browse, view, create/update, and delete HTML email templates via the admin UI
+
+#### 6. Submission Logs
+- View recent submission logs (newest first)
+- Clear logs from the UI
+
+#### 7. Security & Credentials
+- Password reset requires the current password and persists the new password to config.json (`PUT /admin/api/reset-password`)
+- Admin auth attempts are logged when DEBUG mode is enabled
+- The admin UI shows the current admin username in the header and exposes the Turnstile key for a website when editing its settings
+
+### Admin API (Protected)
+All admin endpoints require Basic Auth and are available under `/admin/api`:
+
+- GET  /admin/api/status — dashboard/health summary
+- GET  /admin/api/websites — list websites
+- GET  /admin/api/websites/:id — get website details (includes turnstile key)
+- POST /admin/api/websites — add a new website
+- PUT  /admin/api/websites/:id — update website configuration
+- DELETE /admin/api/websites/:id — remove website
+- GET  /admin/api/smtp — view SMTP config
+- PUT  /admin/api/smtp — update SMTP config
+- GET  /admin/api/statistics — all websites statistics
+- GET  /admin/api/statistics/:id — statistics for a specific website
+- PUT  /admin/api/statistics/:id/reset — reset statistics for a website
+- GET  /admin/api/email-templates — list templates
+- GET  /admin/api/email-templates/:name — get template content
+- PUT  /admin/api/email-templates/:name — create/update template
+- DELETE /admin/api/email-templates/:name — delete template
+- GET  /admin/api/logs — view submission logs
+- DELETE /admin/api/logs — clear logs
+- PUT  /admin/api/reset-password — change admin password (requires currentPassword)
+
+Notes:
+- The admin UI reads fresh config.json where needed (short in-memory cache) so many changes take effect immediately.
+- Be sure to change default credentials in production, or set `ADMIN_USERNAME`/`ADMIN_PASSWORD` in your container environment.
 
 ### Statistics Tracking
 
