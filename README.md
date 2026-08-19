@@ -174,7 +174,8 @@ Add this to your website forms:
 ## Screenshots
 
 
-<img width="1260" height="918" alt="Screenshot 2026-01-14 131054" src="https://github.com/user-attachments/assets/4e3fbbca-e321-495a-a1a7-b15082ee8473" />
+<img width="1073" height="872" alt="formbackend1" src="https://github.com/user-attachments/assets/a898ecef-64b3-4c52-8345-60f40fcdf6e7" />
+
 
 ## 🔧 Installation
 
