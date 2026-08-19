@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
+  <title>New Contact Form Submission</title>
+  <style>
+    /* Force light-only rendering so dark mode doesn't recolor the email */
+    :root {
+      color-scheme: light;
+      supported-color-schemes: light;
+    }
+    html, body {
+      color-scheme: light !important;
+    }
+    /* Prevent Gmail/Apple/Outlook from auto-darkening */
+    .body, .email-wrapper, .email-container, .details-table, .message-table {
+      color-scheme: light !important;
+    }
+  </style>
+</head>
+<body class="body" style="margin: 0; padding: 0; background-color: #0a0b12; font-family: 'Inter', Arial, sans-serif; color: #ffffff; line-height: 1.6;" bgcolor="#0a0b12">
+
+  <!-- Email Wrapper -->
+  <table class="email-wrapper" role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color: #0a0b12;" bgcolor="#0a0b12">
+    <tr>
+      <td align="center" style="padding: 30px 15px; background-color: #0a0b12;" bgcolor="#0a0b12">
+
+        <!-- Main Container -->
+        <table class="email-container" role="presentation" cellpadding="0" cellspacing="0" width="600" style="max-width: 600px; background-color: #121422; border: 2px solid #00f0ff; border-radius: 8px; box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);" bgcolor="#121422">
+
+          <!-- Header Banner -->
+          <tr>
+            <td style="background: linear-gradient(135deg, #0a0b12, #121422); background-color: #121422; border-bottom: 2px solid #00f0ff; padding: 30px 40px; text-align: center;" bgcolor="#121422">
+              <p style="font-family: 'Courier New', monospace; font-size: 0.7rem; color: #00f0ff; letter-spacing: 2px; text-transform: uppercase; margin: 0 0 10px 0; background: rgba(0, 240, 255, 0.1); background-color: rgba(0, 240, 255, 0.1); border: 2px solid #00f0ff; display: inline-block; padding: 8px 18px; border-radius: 6px;">&#127918; NEW CONTACT</p>
+              <h1 style="font-family: 'Arial Black', 'Helvetica', sans-serif; font-size: 2rem; color: #ffee00; text-transform: uppercase; margin: 0; letter-spacing: 2px; text-shadow: 2px 2px 0px #ff007f;">DIVISION STREET</h1>
+              <p style="font-family: 'Courier New', monospace; font-size: 0.65rem; color: #00f0ff; letter-spacing: 1px; margin: 8px 0 0 0;">&#9733; 90'S & 2000'S ALT PARTY BAND &#9733;</p>
+            </td>
+          </tr>
+
+          <!-- Title Section -->
+          <tr>
+            <td style="padding: 30px 40px 10px 40px; text-align: center; background-color: #121422;" bgcolor="#121422">
+              <h2 style="font-family: 'Arial Black', 'Helvetica', sans-serif; font-size: 1.5rem; color: #ffee00; text-transform: uppercase; margin: 0; letter-spacing: 1px; text-shadow: 2px 2px 0px #000;">New Form Submission</h2>
+              <p style="font-family: 'Courier New', monospace; font-size: 0.7rem; color: #00f0ff; letter-spacing: 1px; margin: 8px 0 0 0;">A new message has been received from the website</p>
+            </td>
+          </tr>
+
+          <!-- Divider -->
+          <tr>
+            <td style="padding: 0 40px; background-color: #121422;" bgcolor="#121422">
+              <hr style="border: none; border-top: 1px solid rgba(0, 240, 255, 0.2); margin: 20px 0;">
+            </td>
+          </tr>
+
+          <!-- Submission Details -->
+          <tr>
+            <td style="padding: 10px 40px 20px 40px; background-color: #121422;" bgcolor="#121422">
+              <h3 style="font-family: 'Arial Black', 'Helvetica', sans-serif; font-size: 1rem; color: #00f0ff; text-transform: uppercase; margin: 0 0 15px 0; letter-spacing: 1px;">&#128203; Submission Details</h3>
+              <table class="details-table" role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color: #0d0f1a; border: 1px solid rgba(0, 240, 255, 0.2); border-radius: 6px;" bgcolor="#0d0f1a">
+                
+                <tr>
+                  <td style="padding: 12px 20px; border-bottom: 1px solid rgba(0, 240, 255, 0.1); background-color: #0d0f1a;" bgcolor="#0d0f1a">
+                    <span style="font-family: 'Courier New', monospace; font-size: 0.75rem; color: #ffee00; text-transform: uppercase; letter-spacing: 1px;">Name:</span>
+                    <br>
+                    <span style="font-size: 0.95rem; color: #ffffff;">{{name}}</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px 20px; border-bottom: 1px solid rgba(0, 240, 255, 0.1); background-color: #0d0f1a;" bgcolor="#0d0f1a">
+                    <span style="font-family: 'Courier New', monospace; font-size: 0.75rem; color: #ffee00; text-transform: uppercase; letter-spacing: 1px;">Email Address:</span>
+                    <br>
+                    <span style="font-size: 0.95rem; color: #00f0ff;"><a href="mailto:{{email}}" style="color: #00f0ff; text-decoration: none;">{{email}}</a></span>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px 20px; background-color: #0d0f1a;" bgcolor="#0d0f1a">
+                    <span style="font-family: 'Courier New', monospace; font-size: 0.75rem; color: #ffee00; text-transform: uppercase; letter-spacing: 1px;">Type of Inquiry:</span>
+                    <br>
+                    <span style="font-size: 0.95rem; color: #ffffff;">{{subject}}</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Message Box -->
+          <tr>
+            <td style="padding: 10px 40px 30px 40px; background-color: #121422;" bgcolor="#121422">
+              <h3 style="font-family: 'Arial Black', 'Helvetica', sans-serif; font-size: 1rem; color: #00f0ff; text-transform: uppercase; margin: 0 0 15px 0; letter-spacing: 1px;">&#128221; Message</h3>
+              <table class="message-table" role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color: #0d0f1a; border: 1px solid rgba(0, 240, 255, 0.2); border-left: 4px solid #ffee00; border-radius: 6px;" bgcolor="#0d0f1a">
+                <tr>
+                  <td style="padding: 20px; background-color: #0d0f1a;" bgcolor="#0d0f1a">
+                    <p style="font-size: 0.95rem; color: #a0a5c0; margin: 0; line-height: 1.8; white-space: pre-wrap;">{{message}}</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #05060a; border-top: 2px solid #00f0ff; padding: 25px 40px; text-align: center; border-radius: 0 0 6px 6px;" bgcolor="#05060a">
+              <p style="font-family: 'Courier New', monospace; font-size: 0.65rem; color: #606580; margin: 0; letter-spacing: 1px;">&copy; 2026 Division Street Rock Band. All Rights Reserved.</p>
+              <p style="font-family: 'Courier New', monospace; font-size: 0.6rem; color: #606580; margin: 8px 0 0 0;">This email was generated automatically from the Division Street website contact form.</p>
+            </td>
+          </tr>
+
+        </table>
+        <!-- End Main Container -->
+
+      </td>
+    </tr>
+  </table>
+  <!-- End Email Wrapper -->
+
+</body>
+</html>

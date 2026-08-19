@@ -1,791 +1,1322 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Form Backend Admin</title>
-    <style>
-        :root {
-            --bg-primary: #f8f9fa;
-            --bg-secondary: #ffffff;
-            --bg-tertiary: #e9ecef;
-            --text-primary: #212529;
-            --text-secondary: #6c757d;
-            --border-color: #dee2e6;
-            --accent-primary: #4f46e5;
-            --accent-hover: #4338ca;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --radius-sm: 6px;
-            --radius-md: 8px;
-            --radius-lg: 12px;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FormBackend Admin</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-        [data-theme="dark"] {
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-tertiary: #334155;
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --border-color: #334155;
-            --accent-primary: #6366f1;
-            --accent-hover: #818cf8;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
-        }
+    :root {
+      --bg-primary: #0a0a0a;
+      --bg-secondary: #111111;
+      --surface: #161616;
+      --surface-hover: #1e1e1e;
+      --surface-elevated: #222222;
+      --border: #252525;
+      --border-subtle: #1c1c1c;
+      --text: #f0f0f0;
+      --text-secondary: #a3a3a3;
+      --text-muted: #666666;
+      --primary: #f59e0b;
+      --primary-glow: rgba(245, 158, 11, 0.35);
+      --primary-hover: #fbbf24;
+      --danger: #ff6b7a;
+      --danger-glow: rgba(255, 107, 122, 0.3);
+      --danger-hover: #ff8a96;
+      --success: #4ade80;
+      --success-glow: rgba(74, 222, 128, 0.25);
+      --warning: #facc15;
+      --warning-glow: rgba(250, 204, 21, 0.2);
+      --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+      --glass-bg: rgba(22, 22, 22, 0.7);
+      --glass-border: rgba(245, 158, 11, 0.12);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+      --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
+      --shadow-glow: 0 0 20px var(--primary-glow);
+      --radius: 10px;
+      --radius-lg: 14px;
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            padding: 2rem;
-            min-height: 100vh;
-        }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+    /* Ambient background effect */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(245, 158, 11, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(234, 88, 12, 0.04) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--border-color);
-        }
+    .app { display: flex; min-height: 100vh; position: relative; z-index: 1; }
 
-        h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            letter-spacing: -0.025em;
-        }
+    /* Sidebar */
+    .sidebar {
+      width: 240px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-right: 1px solid var(--border);
+      padding: 1.5rem 0;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 200;
+    }
+    .sidebar-brand {
+      padding: 0 1.25rem 1.5rem;
+      font-size: 1.15rem;
+      font-weight: 700;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      letter-spacing: -0.02em;
+    }
+    .sidebar-brand img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.4));
+    }
+    .sidebar nav a {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.65rem 1.25rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-left: 3px solid transparent;
+      position: relative;
+    }
+    .sidebar nav a::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--accent-gradient);
+      opacity: 0;
+      transition: opacity 0.2s;
+      border-radius: 0 4px 4px 0;
+    }
+    .sidebar nav a:hover {
+      color: var(--text);
+      background: rgba(245, 158, 11, 0.06);
+    }
+    .sidebar nav a:hover::before { opacity: 0.04; }
+    .sidebar nav a.active {
+      color: var(--primary);
+      background: rgba(245, 158, 11, 0.1);
+      border-left-color: var(--primary);
+    }
+    .sidebar nav a.active::before { opacity: 0.08; }
+    .sidebar nav a svg { width: 18px; height: 18px; flex-shrink: 0; position: relative; z-index: 1; }
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 1rem 1.25rem;
+      border-top: 1px solid var(--border-subtle);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
 
-        h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: var(--text-primary);
-        }
+    /* Main */
+    .main {
+      flex: 1;
+      margin-left: 240px;
+      padding: 2rem 2.5rem;
+      max-width: calc(100vw - 240px);
+      position: relative;
+    }
 
-        h3 {
-            font-size: 1.125rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            color: var(--text-primary);
-        }
+    /* Mobile hamburger toggle */
+    .mobile-toggle {
+      display: none;
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      z-index: 150;
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .mobile-toggle:hover {
+      background: var(--surface-hover);
+      border-color: var(--glass-border);
+    }
+    .mobile-toggle svg {
+      width: 20px;
+      height: 20px;
+    }
 
-        .theme-toggle {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 0.5rem 1rem;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+    /* Mobile overlay backdrop */
+    .sidebar-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 190;
+    }
+    .sidebar-backdrop.active {
+      display: block;
+    }
 
-        .theme-toggle:hover {
-            background: var(--bg-tertiary);
-            transform: translateY(-1px);
-        }
+    /* Page header */
+    .page-header {
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .page-header h1 { font-size: 1.65rem; font-weight: 700; letter-spacing: -0.03em; }
+    .page-header p { color: var(--text-secondary); margin-top: 0.3rem; font-size: 0.9rem; }
 
-        .section {
-            background: var(--bg-secondary);
-            border-radius: var(--radius-lg);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
-        }
+    /* Sections */
+    .section { display: none; }
+    .section.active { display: block; }
 
-        .section:hover {
-            box-shadow: var(--shadow-lg);
-        }
+    /* Cards */
+    .card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s ease;
+    }
+    .card:hover {
+      border-color: var(--glass-border);
+      box-shadow: var(--shadow-md);
+    }
+    .card h3 { font-size: 0.8rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; }
 
-        .status-card {
-            background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
-            border-radius: var(--radius-md);
-            padding: 1.25rem;
-            margin-bottom: 1rem;
-            border: 1px solid var(--border-color);
-        }
+    /* Grid */
+    .grid { display: grid; gap: 1.25rem; }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
 
-        .status-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 0.75rem;
-            margin-top: 0.75rem;
-        }
+    /* Stat cards */
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1.5rem;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.25s ease;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--accent-gradient);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+    .stat-card:hover {
+      border-color: var(--glass-border);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+    .stat-card:hover::before { opacity: 1; }
+    .stat-card .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1.2;
+    }
+    .stat-card .stat-label { font-size: 0.82rem; color: var(--text-secondary); margin-top: 0.35rem; font-weight: 500; }
 
-        .status-item {
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-        }
+    /* Tables */
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 0.85rem 1rem; border-bottom: 1px solid var(--border-subtle); }
+    th {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      font-weight: 600;
+      background: rgba(245, 158, 11, 0.03);
+    }
+    td { font-size: 0.88rem; color: var(--text-secondary); }
+    tr {
+      transition: background 0.15s;
+    }
+    tr:hover td {
+      background: rgba(245, 158, 11, 0.04);
+    }
 
-        .status-label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-secondary);
-        }
+    /* Forms */
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 0.4rem; font-weight: 500; }
+    input[type="text"], input[type="number"], input[type="password"], input[type="url"], textarea, select {
+      width: 100%;
+      padding: 0.65rem 0.9rem;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-size: 0.88rem;
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+    input::placeholder, textarea::placeholder {
+      color: var(--text-muted);
+      opacity: 0.6;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15), 0 0 12px rgba(245, 158, 11, 0.1);
+    }
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+      font-family: 'SF Mono', Monaco, Consolas, monospace;
+      font-size: 0.85rem;
+      line-height: 1.7;
+    }
+    .form-row { display: flex; gap: 1rem; }
+    .form-row .form-group { flex: 1; }
 
-        .status-value {
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: var(--text-primary);
-        }
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: inherit;
+      position: relative;
+      letter-spacing: 0.01em;
+    }
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .btn-primary {
+      background: var(--accent-gradient);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(108, 140, 255, 0.25);
+    }
+    .btn-primary:hover {
+      box-shadow: 0 4px 16px rgba(245, 158, 11, 0.35), var(--shadow-glow);
+      transform: translateY(-1px);
+    }
+    .btn-danger {
+      background: linear-gradient(135deg, #ff6b7a 0%, #ff4757 100%);
+      color: #fff;
+      box-shadow: 0 2px 8px var(--danger-glow);
+    }
+    .btn-danger:hover {
+      box-shadow: 0 4px 16px rgba(255, 107, 122, 0.4);
+      transform: translateY(-1px);
+    }
+    .btn-ghost {
+      background: var(--surface);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover {
+      background: var(--surface-hover);
+      color: var(--text);
+      border-color: var(--glass-border);
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-sm { padding: 0.4rem 0.85rem; font-size: 0.8rem; }
+    .btn-group { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 
-        .status-ok {
-            color: var(--success);
-            font-weight: 700;
-        }
+    /* Status badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.25rem 0.7rem;
+      border-radius: 99px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .badge-green { background: rgba(74, 222, 128, 0.12); color: var(--success); border: 1px solid rgba(74, 222, 128, 0.15); }
+    .badge-red { background: rgba(255, 107, 122, 0.12); color: var(--danger); border: 1px solid rgba(255, 107, 122, 0.15); }
+    .badge-yellow { background: rgba(250, 204, 21, 0.12); color: var(--warning); border: 1px solid rgba(250, 204, 21, 0.15); }
 
-        .status-error {
-            color: var(--danger);
-            font-weight: 700;
-        }
+    /* Toast */
+    .toast-container { position: fixed; top: 1.5rem; right: 1.5rem; z-index: 9999; display: flex; flex-direction: column; gap: 0.6rem; }
+    .toast {
+      padding: 0.85rem 1.3rem;
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      font-weight: 500;
+      animation: slideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1), fadeOut 0.3s ease 2.7s;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: var(--shadow-lg);
+    }
+    .toast-success {
+      background: rgba(16, 42, 30, 0.85);
+      border: 1px solid rgba(74, 222, 128, 0.25);
+      color: var(--success);
+    }
+    .toast-error {
+      background: rgba(42, 16, 20, 0.85);
+      border: 1px solid rgba(255, 107, 122, 0.25);
+      color: var(--danger);
+    }
+    @keyframes slideIn {
+      from { transform: translateX(calc(100% + 2rem)); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes fadeOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-8px); }
+    }
 
-        .form-group {
-            margin-bottom: 1rem;
-        }
+    /* Template editor */
+    .template-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem; }
+    .template-select-group { display: flex; align-items: center; gap: 0.6rem; }
+    .template-select-group select {
+      width: auto;
+      min-width: 220px;
+      background: var(--bg-primary);
+    }
+    .editor-container { position: relative; border-radius: var(--radius); overflow: hidden; }
+    .editor-line-numbers {
+      position: absolute; left: 0; top: 0; bottom: 0; width: 3rem;
+      background: rgba(6, 7, 10, 0.9);
+      border-right: 1px solid var(--border);
+      padding: 0.85rem 0.25rem; text-align: right; font-size: 0.78rem;
+      font-family: monospace; color: var(--text-muted); line-height: 1.7;
+      user-select: none; overflow: hidden;
+    }
+    .editor-container textarea {
+      padding-left: 3.5rem;
+      min-height: 400px;
+      background: rgba(6, 7, 10, 0.8);
+      border: 1px solid var(--border);
+    }
+    .editor-container textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1), 0 0 20px rgba(245, 158, 11, 0.05);
+    }
 
-        label {
-            display: block;
-            font-weight: 500;
-            margin-bottom: 0.375rem;
-            color: var(--text-primary);
-            font-size: 0.875rem;
-        }
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 500;
+      align-items: center;
+      justify-content: center;
+      animation: fadeInBg 0.2s ease;
+    }
+    @keyframes fadeInBg { from { opacity: 0; } to { opacity: 1; } }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      width: 90%;
+      max-width: 520px;
+      max-height: 80vh;
+      overflow-y: auto;
+      animation: modalSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: var(--shadow-lg), 0 0 60px rgba(245, 158, 11, 0.05);
+    }
+    @keyframes modalSlideUp {
+      from { transform: translateY(20px) scale(0.97); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    .modal h3 { margin-bottom: 1.25rem; font-size: 1.1rem; font-weight: 600; }
 
-        input[type="text"],
-        input[type="email"],
-        input[type="url"],
-        input[type="number"],
-        input[type="password"] {
-            width: 100%;
-            max-width: 400px;
-            padding: 0.625rem 0.875rem;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-sm);
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            font-size: 0.95rem;
-            transition: all 0.2s ease;
-            box-sizing: border-box;
-        }
+    /* Responsive */
+    @media (max-width: 900px) {
+      .mobile-toggle { display: flex; }
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .sidebar.open { transform: translateX(0); }
+      .main { margin-left: 0; padding: 1.5rem; max-width: 100vw; }
+      .page-header { flex-direction: column; gap: 0.75rem; align-items: stretch; }
+      .page-header h1 { font-size: 1.4rem; }
+      .grid-4 { grid-template-columns: repeat(2, 1fr); }
+      table { font-size: 0.82rem; }
+      th, td { padding: 0.65rem 0.7rem; }
+    }
+    @media (max-width: 600px) {
+      .grid-3, .grid-2 { grid-template-columns: 1fr; }
+      .main { padding: 1rem; }
+      .form-row { flex-direction: column; }
+      .template-toolbar { flex-direction: column; align-items: stretch; }
+      .template-select-group { width: 100%; justify-content: space-between; }
+      .btn-group { flex-direction: column; }
+      .btn-group .btn { width: 100%; justify-content: center; }
+      table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        white-space: nowrap;
+      }
+      .stat-card .stat-value { font-size: 1.6rem; }
+      .modal { width: 95%; padding: 1.25rem; }
+    }
 
-        input:focus {
-            outline: none;
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-        }
+    /* Loading */
+    .loading { color: var(--text-muted); font-style: italic; text-align: center; padding: 2rem; }
+    .empty-state { text-align: center; padding: 3rem 2rem; color: var(--text-muted); background: var(--glass-bg); border: 1px dashed var(--border); border-radius: var(--radius-lg); }
 
-        input[type="checkbox"] {
-            width: 1.25rem;
-            height: 1.25rem;
-            cursor: pointer;
-            accent-color: var(--accent-primary);
-        }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-secondary);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-muted);
+    }
 
-        button {
-            background: var(--accent-primary);
-            color: white;
-            border: none;
-            padding: 0.625rem 1.25rem;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: all 0.2s ease;
-            box-shadow: var(--shadow-sm);
-        }
-
-        button:hover {
-            background: var(--accent-hover);
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-md);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        .website-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .website-card {
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 1rem;
-            transition: all 0.2s ease;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .website-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-            border-color: var(--accent-primary);
-        }
-
-        .website-card h4 {
-            margin: 0 0 0.75rem 0;
-            color: var(--accent-primary);
-            font-weight: 700;
-            font-size: 1rem;
-        }
-
-        .website-card div {
-            margin-bottom: 0.375rem;
-            font-size: 0.875rem;
-        }
-
-        .website-card strong {
-            color: var(--text-secondary);
-            font-weight: 600;
-        }
-
-        .website-card a {
-            color: var(--accent-primary);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s ease;
-        }
-
-        .website-card a:hover {
-            color: var(--accent-hover);
-            text-decoration: underline;
-        }
-
-        pre.json {
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 1rem;
-            overflow-x: auto;
-            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-            font-size: 0.85rem;
-            line-height: 1.5;
-            max-height: 300px;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        .string { color: #10b981; }
-        .number { color: #3b82f6; }
-        .boolean { color: #8b5cf6; }
-        .null { color: #6b7280; }
-        .key { color: #f59e0b; }
-
-        [data-theme="dark"] .string { color: #34d399; }
-        [data-theme="dark"] .number { color: #60a5fa; }
-        [data-theme="dark"] .boolean { color: #a78bfa; }
-        [data-theme="dark"] .null { color: #9ca3af; }
-        [data-theme="dark"] .key { color: #fbbf24; }
-
-        .empty-state {
-            text-align: center;
-            padding: 2rem;
-            color: var(--text-secondary);
-            font-style: italic;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-        }
-
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-        }
-
-        .checkbox-group label {
-            margin-bottom: 0;
-            cursor: pointer;
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding: 1rem;
-            }
-
-            .header {
-                flex-direction: column;
-                gap: 1rem;
-                align-items: flex-start;
-            }
-
-            .website-list {
-                grid-template-columns: 1fr;
-            }
-
-            .status-grid {
-                grid-template-columns: 1fr;
-            }
-
-            input[type="text"],
-            input[type="email"],
-            input[type="url"],
-            input[type="number"],
-            input[type="password"] {
-                max-width: 100%;
-            }
-        }
-    </style>
+    /* Selection */
+    ::selection {
+      background: rgba(245, 158, 11, 0.3);
+      color: #fff;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div style="display: flex; align-items: center; gap: 1rem;">
-                <img src="/logo.png" alt="Logo" style="height: 40px; width: auto; object-fit: contain;" />
-                <h1>Admin Interface</h1>
-            </div>
-            <button class="theme-toggle" id="themeToggle">
-                <span id="themeIcon">🌙</span>
-                <span id="themeText">Dark Mode</span>
-            </button>
-        </div>
+  <div class="toast-container" id="toasts"></div>
 
-        <div class="section">
-            <h2>Status</h2>
-            <div id="status"></div>
+  <!-- Add Website Modal -->
+  <div class="modal-overlay" id="addWebsiteModal">
+    <div class="modal">
+      <h3>Add New Website</h3>
+      <form id="addWebsiteForm">
+        <div class="form-group">
+          <label>Website ID (unique slug)</label>
+          <input type="text" name="id" required placeholder="e.g. website-x">
         </div>
-
-        <div class="section">
-            <h2>Websites</h2>
-            <div id="websites"></div>
-            <h3>Add New Website</h3>
-            <form id="addForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>ID</label>
-                        <input type="text" name="id" required placeholder="website-id" />
-                    </div>
-                    <div class="form-group">
-                        <label>To Email</label>
-                        <input type="email" name="to" required placeholder="admin@example.com" />
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Subject Prefix</label>
-                        <input type="text" name="subjectPrefix" required placeholder="New form submission" />
-                    </div>
-                    <div class="form-group">
-                        <label>Redirect URL</label>
-                        <input type="url" name="redirectUrl" required placeholder="https://example.com/thank-you" />
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Template Path</label>
-                        <input type="text" name="templatePath" required placeholder="/path/to/template.html" />
-                    </div>
-                    <div class="form-group">
-                        <label>Turnstile Key (optional)</label>
-                        <input type="text" name="turnstileKey" placeholder="0x4AAAAA..." />
-                    </div>
-                </div>
-                <button type="submit">Add Website</button>
-            </form>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Recipient Email</label>
+            <input type="email" name="to" required placeholder="admin@example.com">
+          </div>
+          <div class="form-group">
+            <label>Email Subject Prefix</label>
+            <input type="text" name="subjectPrefix" placeholder="Contact Form - ">
+          </div>
         </div>
-
-        <div class="section">
-            <h2>SMTP Settings</h2>
-            <form id="smtpForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Host</label>
-                        <input type="text" name="host" required placeholder="smtp.example.com" />
-                    </div>
-                    <div class="form-group">
-                        <label>Port</label>
-                        <input type="number" name="port" required placeholder="587" />
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>From Email</label>
-                        <input type="email" name="from" required placeholder="noreply@example.com" />
-                    </div>
-                    <div class="form-group checkbox-group">
-                        <input type="checkbox" name="secure" id="secureCheck" />
-                        <label for="secureCheck">Secure Connection (TLS/SSL)</label>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Username (optional)</label>
-                        <input type="text" name="user" placeholder="SMTP username" />
-                    </div>
-                    <div class="form-group">
-                        <label>Password (optional)</label>
-                        <input type="password" name="pass" placeholder="SMTP password" />
-                    </div>
-                </div>
-                <button type="submit">Save SMTP Settings</button>
-            </form>
-            <h3>Current SMTP Configuration</h3>
-            <pre class="json" id="smtpStatus"></pre>
+        <div class="form-group">
+          <label>Redirect URL (after submission)</label>
+          <input type="url" name="redirectUrl" placeholder="https://example.com/thanks.html">
         </div>
-
-        <div class="section">
-            <h2>Website Statistics</h2>
-            <div id="statistics"></div>
-            <div style="margin-top: 1rem;">
-                <button onclick="loadStatistics()" style="background: var(--accent-primary);">Refresh Statistics</button>
-            </div>
+        <div class="form-group">
+          <label>Email Template</label>
+          <select name="templatePath">
+            <option value="">-- Default --</option>
+          </select>
         </div>
-
-        <div class="section">
-            <h2>Security Settings</h2>
-            <h3>Reset Admin Password</h3>
-            <form id="passwordForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Current Password</label>
-                        <input type="password" name="currentPassword" required placeholder="Enter current password" />
-                    </div>
-                    <div class="form-group">
-                        <label>New Password</label>
-                        <input type="password" name="newPassword" required placeholder="Enter new password" />
-                    </div>
-                </div>
-                <button type="submit" style="background: var(--danger);">Update Password</button>
-            </form>
-            <div id="passwordResult" style="margin-top: 1rem;"></div>
+        <div class="form-group">
+          <label>Turnstile Secret Key (optional)</label>
+          <input type="text" name="turnstileKey" placeholder="0x4...">
         </div>
+        <div class="btn-group" style="justify-content:flex-end;margin-top:1rem;">
+          <button type="button" class="btn btn-ghost" onclick="closeModal('addWebsiteModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add Website</button>
+        </div>
+      </form>
     </div>
-    <script>
-        const auth = 'Basic ' + btoa('admin:password');
-        function syntaxHighlight(json) {
-            if (typeof json != 'string') {
-                json = JSON.stringify(json, undefined, 2);
-            }
-            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            return json.replace(/("(\\u[\da-fA-F]{4}|\\[^u]|[^\\"]*)"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?)/g, function (match) {
-                let cls = 'number';
-                if (/^"/.test(match)) {
-                    if (/:$/.test(match)) {
-                        cls = 'key';
-                    } else {
-                        cls = 'string';
-                    }
-                } else if (/true|false/.test(match)) {
-                    cls = 'boolean';
-                } else if (/null/.test(match)) {
-                    cls = 'null';
-                }
-                return '<span class="' + cls + '">' + match + '</span>';
-            });
-        }
-        async function loadStatus() {
-            const res = await fetch('/admin/api/status', { headers: { Authorization: auth } });
-            const data = await res.json();
-            renderStatus(data);
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal">
+      <h3 style="color:var(--danger)">Confirm Delete</h3>
+      <p id="deleteMessage" style="margin-bottom:1.5rem;color:var(--text-muted);"></p>
+      <div class="btn-group" style="justify-content:flex-end;">
+        <button class="btn btn-ghost" onclick="closeModal('deleteModal')">Cancel</button>
+        <button class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Password Reset Modal -->
+  <div class="modal-overlay" id="passwordModal">
+    <div class="modal">
+      <h3>Reset Admin Password</h3>
+      <form id="passwordForm">
+        <div class="form-group">
+          <label>Current Password</label>
+          <input type="password" name="currentPassword" required>
+        </div>
+        <div class="form-group">
+          <label>New Password</label>
+          <input type="password" name="newPassword" required minlength="1">
+        </div>
+        <div class="btn-group" style="justify-content:flex-end;margin-top:1rem;">
+          <button type="button" class="btn btn-ghost" onclick="closeModal('passwordModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- Mobile toggle -->
+    <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+
+    <!-- Sidebar backdrop -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <img src="logo.png" alt="FormBackend">
+        FormBackend
+      </div>
+      <nav>
+        <a href="#" class="active" data-section="dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Dashboard
+        </a>
+        <a href="#" data-section="websites">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Websites
+        </a>
+        <a href="#" data-section="smtp">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          SMTP Config
+        </a>
+        <a href="#" data-section="templates">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Email Templates
+        </a>
+        <a href="#" data-section="statistics">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          Statistics
+        </a>
+        <a href="#" data-section="logs">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><circle cx="12" cy="12" r="3"/><path d="M12 1v6m-4.5 4.5A4.5 4.5 0 0 0 12 19.5a4.5 4.5 0 0 0 4.5-4.5 4.5 4.5 0 0 0-4.5-4.5z"/></svg>
+          Logs
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center;" onclick="openModal('passwordModal')">Change Password</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+
+      <!-- ===== Dashboard ===== -->
+      <div class="section active" id="sec-dashboard">
+        <div class="page-header">
+          <h1>Dashboard</h1>
+          <p>Overview of your FormBackend installation</p>
+        </div>
+        <div class="grid grid-4" id="dashboardStats">
+          <div class="loading">Loading...</div>
+        </div>
+        <div class="card" style="margin-top:1.25rem;">
+          <h3>Configuration Summary</h3>
+          <div id="configSummary" class="loading">Loading...</div>
+        </div>
+      </div>
+
+      <!-- ===== Websites ===== -->
+      <div class="section" id="sec-websites">
+        <div class="page-header">
+          <h1>Websites</h1>
+          <p>Manage form submission destinations and settings</p>
+        </div>
+        <div class="btn-group" style="margin-bottom:1.25rem;">
+          <button class="btn btn-primary" onclick="openModal('addWebsiteModal')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Website
+          </button>
+        </div>
+        <div class="card">
+          <table>
+            <thead><tr><th>ID</th><th>Email</th><th>Submissions</th><th>Last Submission</th><th>Actions</th></tr></thead>
+            <tbody id="websitesTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== SMTP ===== -->
+      <div class="section" id="sec-smtp">
+        <div class="page-header">
+          <h1>SMTP Configuration</h1>
+          <p>Server settings for sending notification emails</p>
+        </div>
+        <div class="card">
+          <form id="smtpForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Host</label>
+                <input type="text" name="host" required>
+              </div>
+              <div class="form-group">
+                <label>Port</label>
+                <input type="number" name="port" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Secure (TLS)</label>
+                <select name="secure"><option value="false">No (False)</option><option value="true">Yes (True)</option></select>
+              </div>
+              <div class="form-group">
+                <label>From Address</label>
+                <input type="email" name="from" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Username (if required)</label>
+                <input type="text" name="user">
+              </div>
+              <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="pass">
+              </div>
+            </div>
+            <div class="btn-group" style="margin-top:1rem;">
+              <button type="submit" class="btn btn-primary">Save SMTP Settings</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- ===== Templates ===== -->
+      <div class="section" id="sec-templates">
+        <div class="page-header">
+          <h1>Email Templates</h1>
+          <p>Edit HTML email templates used for form notifications</p>
+        </div>
+        <div class="template-toolbar">
+          <div class="template-select-group">
+            <label style="font-size:0.85rem;color:var(--text-muted);">Template:</label>
+            <select id="templateSelect"></select>
+          </div>
+          <div class="btn-group">
+            <button class="btn btn-primary btn-sm" onclick="saveTemplate()">Save</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteCurrentTemplate()">Delete</button>
+          </div>
+        </div>
+        <div class="card editor-container">
+          <textarea id="templateEditor" spellcheck="false" placeholder="Select a template to edit..."></textarea>
+          <div class="editor-line-numbers" id="lineNumbers"></div>
+        </div>
+      </div>
+
+      <!-- ===== Statistics ===== -->
+      <div class="section" id="sec-statistics">
+        <div class="page-header">
+          <h1>Statistics</h1>
+          <p>Track form submission performance across all websites</p>
+        </div>
+        <div class="card">
+          <table>
+            <thead><tr><th>Website</th><th>Emails To</th><th>Successful</th><th>Last Submission</th><th>Actions</th></tr></thead>
+            <tbody id="statsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== Logs ===== -->
+      <div class="section" id="sec-logs">
+        <div class="page-header">
+          <div>
+            <h1>Submission Logs</h1>
+            <p>View detailed records of form submissions and their processing status</p>
+          </div>
+          <div class="btn-group">
+            <button class="btn btn-ghost btn-sm" onclick="clearLogs()">Clear All Logs</button>
+            <button class="btn btn-primary btn-sm" onclick="loadLogs()">Refresh</button>
+          </div>
+        </div>
+        <div class="card">
+          <table>
+            <thead><tr><th>Time</th><th>Website</th><th>Status</th><th>Name</th><th>Email</th><th>Details</th></tr></thead>
+            <tbody id="logsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // ==================== Helpers ====================
+    const API = (path) => `/admin/api${path}`;
+
+    // Mobile sidebar toggle
+    const mobileToggle = document.getElementById('mobileToggle');
+    const sidebar = document.getElementById('sidebar');
+    const backdrop = document.getElementById('sidebarBackdrop');
+
+    function openSidebar() { sidebar.classList.add('open'); backdrop.classList.add('active'); }
+    function closeSidebar() { sidebar.classList.remove('open'); backdrop.classList.remove('active'); }
+
+    if (mobileToggle) {
+      mobileToggle.addEventListener('click', () => {
+        sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+      });
+    }
+    if (backdrop) {
+      backdrop.addEventListener('click', closeSidebar);
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && sidebar?.classList.contains('open')) closeSidebar();
+    });
+
+    function toast(msg, type = 'success') {
+      const container = document.getElementById('toasts');
+      const t = document.createElement('div');
+      t.className = `toast toast-${type}`;
+      t.textContent = msg;
+      container.appendChild(t);
+      setTimeout(() => t.remove(), 3000);
+    }
+
+    // Load available templates into add/edit website form dropdowns
+    async function loadTemplateOptionsForForm() {
+      try {
+        const res = await fetch(API('/email-templates'));
+        if (!res.ok) return;
+        const templates = await res.json();
+        document.querySelectorAll('select[name="templatePath"]').forEach(sel => {
+          sel.innerHTML = '<option value="">-- Default --</option>' + templates.map(t => `<option value="email-templates/${t}">${t}</option>`).join('');
+        });
+      } catch { /* silently fail */ }
+    }
+
+    async function openModal(id) {
+      document.getElementById(id).classList.add('active');
+      if (id === 'addWebsiteModal') await loadTemplateOptionsForForm();
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+      if (id === 'deleteModal') {
+        document.getElementById('confirmDeleteBtn').textContent = 'Delete';
+      }
+    }
+
+    function formatUptime(s) {
+      const h = Math.floor(s / 3600);
+      const m = Math.floor((s % 3600) / 60);
+      return `${h}h ${m}m`;
+    }
+
+    function formatDate(d) {
+      if (!d) return '—';
+      return new Date(d).toLocaleString();
+    }
+
+    function updateLineNumbers() {
+      const ta = document.getElementById('templateEditor');
+      const lines = ta.value.split('\n').length;
+      document.getElementById('lineNumbers').textContent = Array.from({length: lines}, (_, i) => i + 1).join('\n');
+    }
+
+    // Sync textarea scroll with line numbers
+    document.addEventListener('DOMContentLoaded', () => {
+      const ta = document.getElementById('templateEditor');
+      if (ta) {
+        ta.addEventListener('scroll', () => {
+          document.getElementById('lineNumbers').scrollTop = ta.scrollTop;
+        });
+      }
+    });
+
+    // ==================== Navigation ====================
+    document.querySelectorAll('.sidebar nav a').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const section = link.dataset.section;
+        document.querySelectorAll('.sidebar nav a').forEach(a => a.classList.remove('active'));
+        link.classList.add('active');
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(`sec-${section}`).classList.add('active');
+        if (section === 'dashboard') loadDashboard();
+        else if (section === 'websites') loadWebsites();
+        else if (section === 'smtp') loadSMTP();
+        else if (section === 'templates') loadTemplates();
+        else if (section === 'statistics') loadStatistics();
+        else if (section === 'logs') loadLogs();
+      });
+    });
+
+    // ==================== Dashboard ====================
+    async function loadDashboard() {
+      const statsEl = document.getElementById('dashboardStats');
+      const configEl = document.getElementById('configSummary');
+      statsEl.innerHTML = '<div class="loading">Loading...</div>';
+      configEl.innerHTML = '<div class="loading">Loading...</div>';
+
+      try {
+        const res = await fetch(API('/status'));
+        if (!res.ok) throw new Error('Failed to load dashboard');
+        const data = await res.json();
+        const { summary, memory, uptime, config } = data;
+
+        statsEl.innerHTML = `
+          <div class="stat-card">
+            <div class="stat-value">${summary.totalSubmissions.toLocaleString()}</div>
+            <div class="stat-label">Total Submissions</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">${config.websiteCount}</div>
+            <div class="stat-label">Configured Websites</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">${formatUptime(uptime)}</div>
+            <div class="stat-label">Uptime</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">${memory.used} MB</div>
+            <div class="stat-label">Heap Used / ${memory.total} MB</div>
+          </div>
+        `;
+
+        configEl.innerHTML = `
+          <div class="grid grid-2" style="margin-top:0.5rem;">
+            <div>
+              <h3 style="font-size:0.85rem;color:var(--text);">Websites</h3>
+              ${config.websites.length ? config.websites.map(w => `<span class="badge badge-green" style="margin:0.15rem;">${w}</span>`).join('') : '<span style="color:var(--text-muted);font-size:0.85rem;">None configured</span>'}
+            </div>
+            <div>
+              <h3 style="font-size:0.85rem;color:var(--text);">CORS Origins</h3>
+              ${config.corsOrigins.length ? config.corsOrigins.map(o => `<span class="badge badge-yellow" style="margin:0.15rem;">${o}</span>`).join('') : '<span style="color:var(--text-muted);font-size:0.85rem;">None configured</span>'}
+            </div>
+          </div>
+          <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);">
+            <h3 style="font-size:0.85rem;color:var(--text);">SMTP Status</h3>
+            <span class="${config.smtpHost ? 'badge badge-green' : 'badge badge-red'}" style="margin-top:0.25rem;">
+              ${config.smtpHost ? `${config.smtpHost}:${config.smtpPort} (${config.smtpSecure ? 'TLS' : 'No TLS'})` : 'Not configured'}
+            </span>
+            <span class="badge badge-yellow" style="margin-left:0.5rem;">Admin: ${config.adminUser || 'unset'}</span>
+          </div>
+        `;
+      } catch (err) {
+        statsEl.innerHTML = `<div class="empty-state" style="color:var(--danger);">Error loading dashboard: ${err.message}</div>`;
+        configEl.innerHTML = '';
+      }
+    }
+
+    // ==================== Websites ====================
+    async function loadWebsites() {
+      const tbody = document.getElementById('websitesTableBody');
+      tbody.innerHTML = '<tr><td colspan="5" class="loading">Loading...</td></tr>';
+
+      try {
+        const [sitesRes, statsRes] = await Promise.all([
+          fetch(API('/websites')),
+          fetch(API('/statistics'))
+        ]);
+        if (!sitesRes.ok) throw new Error('Failed to load websites');
+        const sites = await sitesRes.json();
+        const stats = await statsRes.json();
+
+        const entries = Object.entries(sites);
+        if (!entries.length) {
+          tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No websites configured. Click "Add Website" to get started.</td></tr>';
+          return;
         }
 
-        function renderStatus(status) {
-            const container = document.getElementById('status');
-            const uptime = Math.floor(status.uptime);
-            const memoryUsed = status.memory.used;
-            const memoryTotal = status.memory.total;
-            const config = status.config;
-            const smtp = config.smtp || {};
-            const html = `<div class="status-card">
-                <div class="status-grid">
-                    <div class="status-item">
-                        <span class="status-label">Server Status</span>
-                        <span class="status-value ${status.status === 'ok' ? 'status-ok' : 'status-error'}">${status.status.toUpperCase()}</span>
-                    </div>
-                    <div class="status-item">
-                        <span class="status-label">Port</span>
-                        <span class="status-value">${status.port}</span>
-                    </div>
-                    <div class="status-item">
-                        <span class="status-label">Uptime</span>
-                        <span class="status-value">${uptime}s</span>
-                    </div>
-                    <div class="status-item">
-                        <span class="status-label">Memory</span>
-                        <span class="status-value">${memoryUsed} / ${memoryTotal} MB</span>
-                    </div>
-                    <div class="status-item">
-                        <span class="status-label">Websites</span>
-                        <span class="status-value">${config.websites.length}</span>
-                    </div>
-                    <div class="status-item">
-                        <span class="status-label">Turnstile Keys</span>
-                        <span class="status-value">${config.turnstile.length}</span>
-                    </div>
-                    <div class="status-item">
-                        <span class="status-label">SMTP Host</span>
-                        <span class="status-value">${smtp.host || 'Not set'}</span>
-                    </div>
-                    <div class="status-item">
-                        <span class="status-label">SMTP Port</span>
-                        <span class="status-value">${smtp.port || 'N/A'}</span>
-                    </div>
-                    <div class="status-item">
-                        <span class="status-label">SMTP Secure</span>
-                        <span class="status-value">${smtp.secure ? 'Yes' : 'No'}</span>
-                    </div>
-                    <div class="status-item">
-                        <span class="status-label">SMTP From</span>
-                        <span class="status-value">${smtp.from || 'Not set'}</span>
-                    </div>
-                    <div class="status-item">
-                        <span class="status-label">Last Updated</span>
-                        <span class="status-value">${new Date(status.timestamp).toLocaleString()}</span>
-                    </div>
+        tbody.innerHTML = entries.map(([id, cfg]) => {
+          const s = stats[id] || {};
+          return `
+            <tr>
+              <td><strong>${id}</strong></td>
+              <td>${cfg.to || '—'}</td>
+              <td>${(s.successfulSubmissions || 0).toLocaleString()}</td>
+              <td>${formatDate(s.lastSubmission)}</td>
+              <td>
+                <div class="btn-group">
+                  <button class="btn btn-ghost btn-sm" onclick="editWebsite('${id}')">Edit</button>
+                  <button class="btn btn-danger btn-sm" onclick="deleteWebsite('${id}')">Delete</button>
                 </div>
-            </div>`;
-            container.innerHTML = html;
+              </td>
+            </tr>`;
+        }).join('');
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="5" style="color:var(--danger);">${err.message}</td></tr>`;
+      }
+    }
+
+    let mode = 'add'; // 'add' or 'edit'
+
+    async function submitWebsite(e) {
+      e.preventDefault();
+      const form = e.target;
+      const fd = new FormData(form);
+      const data = Object.fromEntries(fd.entries());
+      const id = data.id;
+      delete data.id;
+
+      try {
+        if (mode === 'edit') {
+          const res = await fetch(API(`/websites/${id}`), {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+          });
+          if (!res.ok) { const err = await res.json(); throw new Error(err.error || 'Failed to update'); }
+          toast('Website updated successfully');
+        } else {
+          const res = await fetch(API('/websites'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, config: data })
+          });
+          if (!res.ok) { const err = await res.json(); throw new Error(err.error || 'Failed to add website'); }
+          toast('Website added successfully');
         }
-        async function loadWebsites() {
-            const res = await fetch('/admin/api/websites', { headers: { Authorization: auth } });
-            const data = await res.json();
-            renderWebsites(data);
-        }
-
-        function renderWebsites(websites) {
-            const container = document.getElementById('websites');
-            if (!websites || Object.keys(websites).length === 0) {
-                container.innerHTML = '<div class="empty-state">No websites configured yet. Add your first website below.</div>';
-                return;
-            }
-            const list = Object.entries(websites).map(([id, cfg]) => {
-                const turnstileKey = cfg.turnstileKey ? `<div><strong>Turnstile:</strong> ${cfg.turnstileKey}</div>` : '';
-                return `<div class="website-card">
-                    <h4>${id}</h4>
-                    <div><strong>To:</strong> ${cfg.to}</div>
-                    <div><strong>Subject:</strong> ${cfg.subjectPrefix}</div>
-                    <div><strong>Redirect:</strong> <a href="${cfg.redirectUrl}" target="_blank">${cfg.redirectUrl}</a></div>
-                    <div><strong>Template:</strong> ${cfg.templatePath}</div>
-                    ${turnstileKey}
-                </div>`;
-            }).join('');
-            container.innerHTML = `<div class="website-list">${list}</div>`;
-        }
-        document.getElementById('addForm').addEventListener('submit', async e => {
-            e.preventDefault();
-            const form = e.target;
-            const formData = new FormData(form);
-            const payload = {
-                id: formData.get('id'),
-                config: {
-                    to: formData.get('to'),
-                    subjectPrefix: formData.get('subjectPrefix'),
-                    redirectUrl: formData.get('redirectUrl'),
-                    templatePath: formData.get('templatePath')
-                }
-            };
-            const turnstileKey = formData.get('turnstileKey');
-            if (turnstileKey) payload.config.turnstileKey = turnstileKey;
-            const res = await fetch('/admin/api/websites', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', Authorization: auth },
-                body: JSON.stringify(payload)
-            });
-            const result = await res.json();
-            alert(JSON.stringify(result));
-            loadWebsites();
-        });
-        // Load and handle SMTP settings
-        async function loadSmtp() {
-            const res = await fetch('/admin/api/smtp', { headers: { Authorization: auth } });
-            if (!res.ok) return;
-            const data = await res.json();
-            document.getElementById('smtpStatus').innerHTML = syntaxHighlight(data);
-            // Populate form fields with current values
-            document.querySelector('#smtpForm input[name="host"]').value = data.host || '';
-            document.querySelector('#smtpForm input[name="port"]').value = data.port || '';
-            document.querySelector('#smtpForm input[name="secure"]').checked = !!data.secure;
-            document.querySelector('#smtpForm input[name="from"]').value = data.from || '';
-            document.querySelector('#smtpForm input[name="user"]').value = data.user || '';
-            document.querySelector('#smtpForm input[name="pass"]').value = data.pass || '';
-        }
-
-        async function loadStatistics() {
-            const res = await fetch('/admin/api/statistics', { headers: { Authorization: auth } });
-            if (!res.ok) {
-                document.getElementById('statistics').innerHTML = '<div class="empty-state">Failed to load statistics</div>';
-                return;
-            }
-            const data = await res.json();
-            renderStatistics(data);
-        }
-
-        function renderStatistics(stats) {
-            const container = document.getElementById('statistics');
-            if (!stats || Object.keys(stats).length === 0) {
-                container.innerHTML = '<div class="empty-state">No statistics available yet. Form submissions will appear here.</div>';
-                return;
-            }
-
-            const statsHtml = Object.entries(stats).map(([id, stat]) => {
-                const lastSubmission = stat.lastSubmission 
-                    ? new Date(stat.lastSubmission).toLocaleString() 
-                    : 'Never';
-                
-                return `<div class="website-card">
-                    <h4>${stat.name || id}</h4>
-                    <div><strong>Website ID:</strong> ${id}</div>
-                    <div><strong>Email:</strong> ${stat.email}</div>
-                    <div><strong>Successful Submissions:</strong> <span style="color: var(--success); font-weight: bold;">${stat.successfulSubmissions}</span></div>
-                    <div><strong>Last Submission:</strong> ${lastSubmission}</div>
-                    <div style="margin-top: 0.75rem;">
-                        <button onclick="resetStatistics('${id}')" style="background: var(--danger); padding: 0.4rem 0.8rem; font-size: 0.85rem;">Reset Counter</button>
-                    </div>
-                </div>`;
-            }).join('');
-
-            container.innerHTML = `<div class="website-list">${statsHtml}</div>`;
-        }
-
-        async function resetStatistics(websiteId) {
-            if (!confirm(`Are you sure you want to reset statistics for "${websiteId}"? This cannot be undone.`)) {
-                return;
-            }
-
-            const res = await fetch(`/admin/api/statistics/${websiteId}/reset`, {
-                method: 'PUT',
-                headers: { Authorization: auth }
-            });
-
-            if (res.ok) {
-                alert('Statistics reset successfully');
-                loadStatistics();
-            } else {
-                alert('Failed to reset statistics');
-            }
-        }
-        document.getElementById('smtpForm').addEventListener('submit', async e => {
-            e.preventDefault();
-            const form = e.target;
-            const formData = new FormData(form);
-            const payload = {
-                host: formData.get('host'),
-                port: Number(formData.get('port')),
-                secure: formData.get('secure') === 'on',
-                from: formData.get('from')
-            };
-            // Only include user/pass if provided
-            const user = formData.get('user');
-            const pass = formData.get('pass');
-            if (user) payload.user = user;
-            if (pass) payload.pass = pass;
-            const res = await fetch('/admin/api/smtp', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json', Authorization: auth },
-                body: JSON.stringify(payload)
-            });
-            const result = await res.json();
-            alert(JSON.stringify(result));
-            loadSmtp();
-        });
-
-        // Password reset form handler
-        document.getElementById('passwordForm').addEventListener('submit', async e => {
-            e.preventDefault();
-            const form = e.target;
-            const formData = new FormData(form);
-            const currentPassword = formData.get('currentPassword');
-            const newPassword = formData.get('newPassword');
-            
-            const resultDiv = document.getElementById('passwordResult');
-            resultDiv.innerHTML = '';
-            
-            if (newPassword.length < 4) {
-                resultDiv.innerHTML = '<div style="color: var(--danger);">Password must be at least 4 characters</div>';
-                return;
-            }
-            
-            const res = await fetch('/admin/api/admin/reset-password', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json', Authorization: auth },
-                body: JSON.stringify({ currentPassword, newPassword })
-            });
-            
-            const result = await res.json();
-            
-            if (res.ok) {
-                resultDiv.innerHTML = '<div style="color: var(--success);">✓ ' + result.message + '</div>';
-                form.reset();
-                // Update the auth token for future requests
-                const newAuth = 'Basic ' + btoa('admin:' + newPassword);
-                // Note: User will need to re-login with new password for the current session
-                setTimeout(() => {
-                    alert('Password updated! You will need to re-login with your new password.');
-                }, 500);
-            } else {
-                resultDiv.innerHTML = '<div style="color: var(--danger);">✗ ' + result.error + '</div>';
-            }
-        });
-
-        // Theme toggle functionality
-        function initTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            updateThemeButton(savedTheme);
-        }
-
-        function updateThemeButton(theme) {
-            const icon = document.getElementById('themeIcon');
-            const text = document.getElementById('themeText');
-            if (theme === 'dark') {
-                icon.textContent = '☀️';
-                text.textContent = 'Light Mode';
-            } else {
-                icon.textContent = '🌙';
-                text.textContent = 'Dark Mode';
-            }
-        }
-
-        document.getElementById('themeToggle').addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            updateThemeButton(newTheme);
-        });
-
-        // Initial load calls
-        initTheme();
-        loadStatus();
+        closeModal('addWebsiteModal');
+        form.reset();
+        mode = 'add';
+        document.getElementById('addWebsiteModal').querySelector('h3').textContent = 'Add New Website';
         loadWebsites();
-        loadSmtp();
-        loadStatistics();
-    </script>
+      } catch (err) { toast(err.message, 'error'); }
+    }
+
+    document.getElementById('addWebsiteForm').addEventListener('submit', submitWebsite);
+
+    async function editWebsite(id) {
+      try {
+        const res = await fetch(API(`/websites/${id}`));
+        if (!res.ok) throw new Error('Failed to load website config');
+        const cfg = await res.json();
+
+        const form = document.getElementById('addWebsiteForm');
+        mode = 'edit';
+        form.querySelector('input[name="id"]').value = id;
+        form.querySelector('input[name="to"]').value = cfg.to || '';
+        form.querySelector('input[name="subjectPrefix"]').value = cfg.subjectPrefix || '';
+        form.querySelector('input[name="redirectUrl"]').value = cfg.redirectUrl || '';
+        await loadTemplateOptionsForForm();
+        const sel = form.querySelector('select[name="templatePath"]');
+        if (sel) { sel.value = cfg.templatePath || ''; }
+        form.querySelector('input[name="turnstileKey"]').value = cfg.turnstileKey || '';
+
+        document.getElementById('addWebsiteModal').querySelector('h3').textContent = 'Edit Website: ' + id;
+        openModal('addWebsiteModal');
+      } catch (err) { toast(err.message, 'error'); }
+    }
+
+    async function deleteWebsite(id) {
+      document.getElementById('deleteMessage').textContent = `Are you sure you want to delete "${id}"? This will remove its recipient config and Turnstile key.`;
+      document.getElementById('confirmDeleteBtn').onclick = async () => {
+        try {
+          const res = await fetch(API(`/websites/${id}`), { method: 'DELETE' });
+          if (!res.ok) { const err = await res.json(); throw new Error(err.error || 'Failed to delete'); }
+          toast('Website deleted');
+          closeModal('deleteModal');
+          loadWebsites();
+        } catch (err) { toast(err.message, 'error'); }
+      };
+      openModal('deleteModal');
+    }
+
+    // ==================== SMTP ====================
+    async function loadSMTP() {
+      const form = document.getElementById('smtpForm');
+      try {
+        const res = await fetch(API('/smtp'));
+        if (!res.ok) throw new Error('Failed to load SMTP config');
+        const cfg = await res.json();
+        form.querySelector('[name="host"]').value = cfg.host || '';
+        form.querySelector('[name="port"]').value = cfg.port || '';
+        form.querySelector('[name="secure"]').value = String(cfg.secure || false);
+        form.querySelector('[name="from"]').value = cfg.from || '';
+        form.querySelector('[name="user"]').value = cfg.user || '';
+        form.querySelector('[name="pass"]').value = ''; // never expose password
+      } catch (err) { toast(err.message, 'error'); }
+    }
+
+    document.getElementById('smtpForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const data = Object.fromEntries(fd.entries());
+      data.secure = data.secure === 'true';
+      try {
+        const res = await fetch(API('/smtp'), { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) });
+        if (!res.ok) { const err = await res.json(); throw new Error(err.error || 'Failed to save'); }
+        toast('SMTP settings saved');
+      } catch (err) { toast(err.message, 'error'); }
+    });
+
+    // ==================== Templates ====================
+    async function loadTemplates() {
+      const sel = document.getElementById('templateSelect');
+      sel.innerHTML = '<option value="">-- Loading --</option>';
+      try {
+        const res = await fetch(API('/email-templates'));
+        if (!res.ok) throw new Error('Failed to list templates');
+        const templates = await res.json();
+        sel.innerHTML = templates.length ? templates.map(t => `<option value="${t}">${t}</option>`).join('') : '<option value="">-- No templates found --</option>';
+        if (templates.length) { sel.value = templates[0]; loadTemplateContent(templates[0]); }
+      } catch (err) { toast(err.message, 'error'); }
+    }
+
+    let currentTemplate = '';
+
+    async function loadTemplateContent(name) {
+      currentTemplate = name;
+      const editor = document.getElementById('templateEditor');
+      editor.value = 'Loading...';
+      try {
+        const res = await fetch(API(`/email-templates/${encodeURIComponent(name)}`));
+        if (!res.ok) throw new Error('Template not found');
+        const data = await res.json();
+        editor.value = data.content || '';
+        updateLineNumbers();
+      } catch (err) { toast(err.message, 'error'); editor.value = ''; }
+    }
+
+    document.getElementById('templateSelect').addEventListener('change', e => {
+      if (e.target.value) loadTemplateContent(e.target.value);
+    });
+
+    document.getElementById('templateEditor').addEventListener('input', updateLineNumbers);
+
+    async function saveTemplate() {
+      if (!currentTemplate) { toast('No template selected', 'error'); return; }
+      const content = document.getElementById('templateEditor').value;
+      try {
+        const res = await fetch(API(`/email-templates/${encodeURIComponent(currentTemplate)}`), {
+          method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ content })
+        });
+        if (!res.ok) { const err = await res.json(); throw new Error(err.error || 'Failed to save'); }
+        toast('Template saved successfully');
+      } catch (err) { toast(err.message, 'error'); }
+    }
+
+    async function deleteCurrentTemplate() {
+      if (!currentTemplate) { toast('No template selected', 'error'); return; }
+      document.getElementById('deleteMessage').textContent = `Delete "${currentTemplate}"? This cannot be undone.`;
+      document.getElementById('confirmDeleteBtn').onclick = async () => {
+        try {
+          const res = await fetch(API(`/email-templates/${encodeURIComponent(currentTemplate)}`), { method: 'DELETE' });
+          if (!res.ok) { const err = await res.json(); throw new Error(err.error || 'Failed to delete'); }
+          toast('Template deleted');
+          closeModal('deleteModal');
+          loadTemplates();
+        } catch (err) { toast(err.message, 'error'); }
+      };
+      openModal('deleteModal');
+    }
+
+    // ==================== Statistics ====================
+    async function loadStatistics() {
+      const tbody = document.getElementById('statsTableBody');
+      tbody.innerHTML = '<tr><td colspan="5" class="loading">Loading...</td></tr>';
+
+      try {
+        const res = await fetch(API('/statistics'));
+        if (!res.ok) throw new Error('Failed to load statistics');
+        const stats = await res.json();
+
+        const entries = Object.entries(stats);
+        if (!entries.length) {
+          tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No data available.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = entries.map(([id, s]) => `
+          <tr>
+            <td><strong>${s.name || id}</strong> <span style="color:var(--text-muted);font-size:0.8rem;">(${id})</span></td>
+            <td>${s.email || '—'}</td>
+            <td><span class="badge badge-green">${(s.successfulSubmissions || 0).toLocaleString()}</span></td>
+            <td>${formatDate(s.lastSubmission)}</td>
+            <td>
+              <button class="btn btn-ghost btn-sm" onclick="resetStats('${id}')">Reset</button>
+            </td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="5" style="color:var(--danger);">${err.message}</td></tr>`;
+      }
+    }
+
+    async function resetStats(id) {
+      document.getElementById('deleteMessage').textContent = `Reset statistics for "${id}"? This will set submissions to 0.`;
+      document.getElementById('confirmDeleteBtn').textContent = 'Reset Stats';
+      document.getElementById('confirmDeleteBtn').onclick = async () => {
+        try {
+          const res = await fetch(API(`/statistics/${id}/reset`), { method: 'PUT' });
+          if (!res.ok) { const err = await res.json(); throw new Error(err.error || 'Failed to reset'); }
+          toast('Statistics reset');
+          closeModal('deleteModal');
+          document.getElementById('confirmDeleteBtn').textContent = 'Delete'; // restore default label
+          loadStatistics();
+        } catch (err) { toast(err.message, 'error'); }
+      };
+      openModal('deleteModal');
+    }
+
+    // ==================== Logs ====================
+    async function loadLogs() {
+      const tbody = document.getElementById('logsTableBody');
+      tbody.innerHTML = '<tr><td colspan="6" class="loading">Loading...</td></tr>';
+
+      try {
+        const res = await fetch(API('/logs'));
+        if (!res.ok) throw new Error('Failed to load logs');
+        const logs = await res.json();
+
+        if (!logs.length) {
+          tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No submission logs yet.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = logs.map(log => {
+          const statusClass = log.success ? 'badge-green' : 'badge-red';
+          const statusText = log.success ? 'Success' : 'Failed';
+          const details = log.error || (log.recipient ? `Sent to ${log.recipient}` : '');
+
+          // Build a compact summary of ALL submitted data for this entry
+          const dataRows = [];
+          if (log.phone) dataRows.push(`<strong>Phone:</strong> ${log.phone}`);
+          if (log.rooms) dataRows.push(`<strong>Rooms/Option:</strong> ${log.rooms}`);
+          if (log.service) dataRows.push(`<strong>Service:</strong> ${log.service}`);
+          if (log.message) dataRows.push(`<strong>Message:</strong> ${log.message}`);
+          if (log.ip) dataRows.push(`<strong>IP:</strong> ${log.ip}`);
+
+          // Show the FULL raw request body if present (captures every field received, even on failures)
+          let rawBodyHtml = '';
+          if (log.rawBody && Object.keys(log.rawBody).length) {
+            // Escape HTML entities using char codes so the formatter can't alter them
+            const amp = String.fromCharCode(38) + 'amp;';
+            const lt = String.fromCharCode(38) + 'lt;';
+            const gt = String.fromCharCode(38) + 'gt;';
+            const quot = String.fromCharCode(38) + 'quot;';
+            const apos = String.fromCharCode(38) + '#39;';
+            const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({'&':amp,'<':lt,'>':gt,'"':quot,"'":apos}[c]));
+            const safeRaw = esc(JSON.stringify(log.rawBody, null, 2));
+            rawBodyHtml = `<div style="margin-top:0.4rem;padding-top:0.4rem;border-top:1px solid var(--border-subtle);">
+              <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.25rem;">Full Request Body</div>
+              <pre style="margin:0;font-size:0.75rem;color:var(--text-secondary);white-space:pre-wrap;word-break:break-word;background:var(--bg-primary);padding:0.5rem;border-radius:6px;border:1px solid var(--border-subtle);">${safeRaw}</pre>
+            </div>`;
+          }
+
+          const dataSummary = dataRows.length
+            ? `<div style="margin-top:0.4rem;padding-top:0.4rem;border-top:1px solid var(--border-subtle);font-size:0.8rem;color:var(--text-secondary);">${dataRows.join('<br>')}</div>`
+            : '';
+
+          return `
+            <tr>
+              <td><span style="color:var(--text-muted);font-size:0.82rem;">${formatDate(log.timestamp)}</span></td>
+              <td><strong>${log.website_id || '—'}</strong></td>
+              <td><span class="badge ${statusClass}">${statusText}</span></td>
+              <td>${log.name || '—'}</td>
+              <td>${log.email || '—'}</td>
+              <td>
+                <span style="color:var(--text-muted);font-size:0.82rem;">${details || '—'}</span>
+                ${dataSummary}
+                ${rawBodyHtml}
+              </td>
+            </tr>`;
+        }).join('');
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="6" style="color:var(--danger);">${err.message}</td></tr>`;
+      }
+    }
+
+    async function clearLogs() {
+      document.getElementById('deleteMessage').textContent = 'Are you sure you want to clear all submission logs? This cannot be undone.';
+      document.getElementById('confirmDeleteBtn').textContent = 'Clear Logs';
+      document.getElementById('confirmDeleteBtn').onclick = async () => {
+        try {
+          const res = await fetch(API('/logs'), { method: 'DELETE' });
+          if (!res.ok) { const err = await res.json(); throw new Error(err.error || 'Failed to clear logs'); }
+          toast('Logs cleared');
+          closeModal('deleteModal');
+          loadLogs();
+        } catch (err) { toast(err.message, 'error'); }
+      };
+      openModal('deleteModal');
+    }
+
+    // ==================== Password Reset ====================
+    document.getElementById('passwordForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const data = Object.fromEntries(fd.entries());
+      try {
+        const res = await fetch(API('/reset-password'), {
+          method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data)
+        });
+        if (!res.ok) { const err = await res.json(); throw new Error(err.error || 'Failed to update'); }
+        toast('Password updated successfully');
+        closeModal('passwordModal');
+        e.target.reset();
+      } catch (err) { toast(err.message, 'error'); }
+    });
+
+    // ==================== Init ====================
+    document.addEventListener('DOMContentLoaded', () => loadDashboard());
+  </script>
 </body>
 </html>

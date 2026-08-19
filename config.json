@@ -1,63 +1,92 @@
 {
     "recipients": {
         "website-a": {
-            "to": "YOUR_EMAIL@gmail.com",
-            "subjectPrefix": "Web Form - ",
-            "redirectUrl": "https://YOUR_DOMAIN.com/thanks.html",
-            "templatePath": "email-template.html"
+            "to": "ppspaintllc@gmail.com",
+            "subjectPrefix": "PPS Web Form - ",
+            "redirectUrl": "https://ppspaintllc.com/thanks.html",
+            "templatePath": "email-templates/email-template.html"
         },
         "website-b": {
-            "to": "email2@domain.com",
-            "subjectPrefix": "Website Contact Form - ",
-            "redirectUrl": "https://YOURDOMAIN_2.com/thanks.html",
-            "templatePath": "email-template-website-b.html"
+            "to": "matt@codemov.com",
+            "subjectPrefix": "CodeMOV Website Contact Form - ",
+            "redirectUrl": "https://codemov.com/thanks.html",
+            "templatePath": "email-templates/email-template-website-b.html"
         },
         "website-c": {
-            "to": "email3@domain.com",
-            "subjectPrefix": "Web Form - ",
-            "redirectUrl": "https://DOMAIN_3.com/thanks.html",
-            "templatePath": "email-template-website-c.html"
+            "to": "rick@trickiedickcustoms.com",
+            "subjectPrefix": "TDC Web Form - ",
+            "redirectUrl": "https://trickiedickcustoms.com/thanks.html",
+            "templatePath": "email-templates/email-template-website-c.html"
+        },
+        "website-d": {
+            "to": "matt@codemov.com",
+            "subjectPrefix": "Carolina Flats Contact Form",
+            "redirectUrl": "https://codemov.com/cff/thanks.html",
+            "templatePath": "email-templates/email-template-website-d.html"
+        },
+        "divst": {
+            "to": "matt@codemov.com",
+            "subjectPrefix": "Contact Form - Division Street",
+            "redirectUrl": "https://divisionstreetband.com/thanks.html",
+            "templatePath": "email-templates/email-template-divst.html"
         }
     },
     "statistics": {
         "website-a": {
-            "successfulSubmissions": 5,
-            "lastSubmission": "2026-01-14T14:14:06.266Z"
+            "successfulSubmissions": 3,
+            "lastSubmission": "2026-07-09T20:01:27.160Z"
         },
         "website-b": {
-            "successfulSubmissions": 1,
-            "lastSubmission": "2026-01-14T09:15:00.000Z"
+            "successfulSubmissions": 3,
+            "lastSubmission": "2026-07-07T15:21:37.969Z"
         },
         "website-c": {
-            "successfulSubmissions": 0,
-            "lastSubmission": null
+            "successfulSubmissions": 8,
+            "lastSubmission": "2026-07-11T18:21:43.972Z"
+        },
+"website-d": {
+            "successfulSubmissions": 1,
+            "lastSubmission": "2026-07-11T18:21:43.972Z"
+        },
+"divst": {
+            "successfulSubmissions": 1,
+            "lastSubmission": "2026-07-11T18:21:43.972Z"
         }
+
+
     },
     "smtp": {
-        "host": "smtp.yourdomain.com",
-        "port": 25,
+        "host": "oc2.codemov.com",
+        "port": 2500,
         "secure": false,
-        "from": "user@domain.com",
+        "from": "cloud@codemov.com",
         "user": "",
         "pass": ""
     },
     "turnstile": {
         "website-a": {
-            "secretKey": "SECRETKEY1"
+            "secretKey": "0x4AAAAAACHEUnfmN1DGW0vjncul1VYERXU"
         },
         "website-b": {
-            "secretKey": "SECRETKEY2"
+            "secretKey": "0x4AAAAAACJv7cVNNeQGRrqylzK4yrGpY78"
         },
         "website-c": {
-            "secretKey": "SECRETKEY3"
+            "secretKey": "0x4AAAAAACLESjX5VpIe5To-BHRKnU790oY"
+        },
+        "website-d": {
+            "secretKey": "0x4AAAAAADx9oAQOe68V6mDYQPO_rMWeZI4"
+        },
+        "divst": {
+            "secretKey": "0x4AAAAAAEHJ37a7Ir237RACgdyRdWRr8YA"
         }
     },
     "cors": {
         "allowedOrigins": [
-            "https://DOMAIN1.com",
-            "https://DOMAIN2.com",
-            "https://DOMAIN3.com",
-            "https://DOMAIN4.com"
+            "https://pps.codemov.com",
+            "https://ppspaintllc.com",
+            "https://trickiedickcustoms.com",
+            "https://codemov.com",
+            "https://divisionstreetband.com"
         ]
     },
     "admin": {

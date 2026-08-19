@@ -29,9 +29,7 @@ RUN npm ci --only=production && npm cache clean --force
 # Copy application files
 COPY server.js ./
 COPY config.json ./
-COPY email-template-website-a.html ./
-COPY email-template-website-b.html ./
-COPY email-template-website-c.html ./
+COPY email-templates/ ./email-templates/
 COPY logo.png ./
 
 # Copy admin directory

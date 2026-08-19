@@ -1,0 +1,58 @@
+{
+    "recipients": {
+        "website-a": {
+            "to": "test@example.com",
+            "subjectPrefix": "Updated Subject - ",
+            "redirectUrl": "https://example.com/thanks.html",
+            "templatePath": "updated-template.html"
+        },
+        "website-b": {
+            "to": "matt@codemov.com",
+            "subjectPrefix": "CodeMOV Website Contact Form - ",
+            "redirectUrl": "https://codemov.com/thanks.html",
+            "templatePath": "email-template-website-b.html"
+        }
+    },
+    "statistics": {
+        "website-a": {
+            "successfulSubmissions": 5,
+            "lastSubmission": "2026-01-14T14:14:06.266Z"
+        },
+        "website-b": {
+            "successfulSubmissions": 1,
+            "lastSubmission": "2026-01-14T09:15:00.000Z"
+        },
+        "website-c": {
+            "successfulSubmissions": 0,
+            "lastSubmission": null
+        }
+    },
+    "smtp": {
+        "host": "oc2.codemov.com",
+        "port": 2500,
+        "secure": false,
+        "from": "cloud@codemov.com",
+        "user": "",
+        "pass": ""
+    },
+    "turnstile": {
+        "website-a": {
+            "secretKey": "0x4AAAAAACHEUnfmN1DGW0vjncul1VYERXU"
+        },
+        "website-b": {
+            "secretKey": "0x4AAAAAACJv7cVNNeQGRrqylzK4yrGpY78"
+        }
+    },
+    "cors": {
+        "allowedOrigins": [
+            "https://pps.codemov.com",
+            "https://ppspaintllc.com",
+            "https://trickiedickcustoms.com",
+            "https://codemov.com"
+        ]
+    },
+    "admin": {
+        "username": "admin",
+        "password": "password"
+    }
+}

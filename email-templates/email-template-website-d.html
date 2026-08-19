@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>New Website Form Submission</title>
+        <style>
+            body {
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: #2c3e50;
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #f8f9fa;
+            }
+            .header {
+                background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+                padding: 30px 25px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+                color: white;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                text-align: center;
+            }
+            .header img {
+                max-width: 200px;
+                height: auto;
+                margin-bottom: 15px;
+            }
+            .content {
+                background-color: #ffffff;
+                padding: 25px;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                border: 1px solid #e9ecef;
+            }
+            .details-list {
+                background-color: #f1f3f5;
+                padding: 18px;
+                border-radius: 6px;
+                margin: 15px 0;
+                border-left: 4px solid #4a5568;
+            }
+            .details-list li {
+                margin: 8px 0;
+                font-size: 14px;
+            }
+            .message-box {
+                background-color: #e8f4fd;
+                padding: 18px;
+                border-radius: 6px;
+                border-left: 4px solid #4a5568;
+                margin: 15px 0;
+            }
+            .footer {
+                margin-top: 25px;
+                font-size: 12px;
+                color: #6c757d;
+                text-align: center;
+                padding: 15px;
+                background-color: #ffffff;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            }
+
+            h2 {
+                margin: 0;
+                font-size: 24px;
+                font-weight: 600;
+                text-align: center;
+            }
+            h3 {
+                color: #2c3e50;
+                margin-top: 0;
+                font-size: 18px;
+                font-weight: 600;
+            }
+            strong {
+                color: #34495e;
+            }
+
+            /* Dark mode styling */
+            @media (prefers-color-scheme: dark) {
+                body {
+                    background-color: #1a1d23;
+                    color: #e4e6eb;
+                }
+                .header {
+                    background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+                }
+                .content {
+                    background-color: #24272d;
+                    border-color: #3a3f47;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+                }
+                .details-list {
+                    background-color: #2a2d35;
+                    border-left-color: #718096;
+                }
+                .message-box {
+                    background-color: #1e2a38;
+                    border-left-color: #718096;
+                }
+                .footer {
+                    background-color: #24272d;
+                    color: #9ca3af;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+                }
+                h2 {
+                    color: #ffffff;
+                }
+                h3 {
+                    color: #e4e6eb;
+                }
+                strong {
+                    color: #a8b2c1;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <img src="https://codemov.com/cff/header4.png" alt="Codemov" />
+            <h2>New Website Form Submission Received</h2>
+        </div>
+
+        <div class="content">
+            <div class="details-list">
+                <h3>📋 Submission Details</h3>
+                <ul>
+                    <li><strong>Website:</strong> {{website_id}}</li>
+                    <li><strong>Name:</strong> {{name}}</li>
+                    <li><strong>Email:</strong> {{email}}</li>
+                </ul>
+            </div>
+
+            <div class="message-box">
+                <h3>📝 Project Details</h3>
+                <p>{{message}}</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>This email was automatically generated from the codemov.com form submission system.</p>
+        </div>
+    </body>
+</html>
